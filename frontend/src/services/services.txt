@@ -1,0 +1,1 @@
+Funciones para comunicarse con APIs externas y srvicios backend.

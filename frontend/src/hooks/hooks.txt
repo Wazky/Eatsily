@@ -1,0 +1,1 @@
+Customs hook para lógica reutilizable con estado.

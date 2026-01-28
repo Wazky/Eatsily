@@ -1,0 +1,2 @@
+Componentes que representan páginas completas.
+Cada página puede tener su propia carpeta con componentes específicos.

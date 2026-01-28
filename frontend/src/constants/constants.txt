@@ -1,0 +1,1 @@
+Valores constantes como configuraciones, URLs de API, etc.

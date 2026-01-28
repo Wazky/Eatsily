@@ -1,0 +1,15 @@
+es\uvigo\esei\tfg\rest\UsersResource.class
+es\uvigo\esei\tfg\rest\PetResource.class
+es\uvigo\esei\tfg\entities\User.class
+es\uvigo\esei\tfg\dao\UsersDAO.class
+es\uvigo\esei\tfg\entities\Person.class
+es\uvigo\esei\tfg\entities\Species.class
+es\uvigo\esei\tfg\dao\DAOException.class
+es\uvigo\esei\tfg\rest\CORSFilter.class
+es\uvigo\esei\tfg\DAAExampleApplication.class
+es\uvigo\esei\tfg\services\PetService.class
+es\uvigo\esei\tfg\entities\Pet.class
+es\uvigo\esei\tfg\dao\PetDAO.class
+es\uvigo\esei\tfg\dao\PeopleDAO.class
+es\uvigo\esei\tfg\dao\DAO.class
+es\uvigo\esei\tfg\rest\PeopleResource.class

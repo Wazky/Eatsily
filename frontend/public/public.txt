@@ -1,0 +1,2 @@
+Archivos que se sirven directamente sin procesamiento.
+Estos archivos se encuentran disponibles en la raíz del proyecto.

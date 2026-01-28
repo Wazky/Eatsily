@@ -1,0 +1,4 @@
+Componentes reutilizables (organizados por categoría).
+    -UI (Componentes básicos: buttons, inputs, cards, ...).
+    -Layout (Plantillas: headers, footer, sidebar, ...).
+    -Common (Componentes compartidos).

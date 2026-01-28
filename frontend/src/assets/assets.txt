@@ -1,0 +1,2 @@
+Recursos que serán procesados por Vite.
+Son importados en el código.
