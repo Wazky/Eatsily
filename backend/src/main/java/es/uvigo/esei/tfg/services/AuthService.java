@@ -40,7 +40,7 @@ public class AuthService {
 
     private final PeopleDAO peopleDAO;
     private final UsersDAO usersDAO;
-    private final TokenDAO tokenDAO;
+    private final TokenDAO  tokenDAO;
     
     public AuthService() {
         this.jwtUtil = new JwtUtil();
@@ -130,12 +130,21 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid  token");
         }
 
+        // Verify token existence and revocation status in the database
+        Token storedToken = tokenDAO.getByToken(token);
+        if (storedToken == null || storedToken.isRevoked()) {
+            LOG.warning("Refresh token is invalid or revoked for user: " + username);
+            throw new IllegalArgumentException("Invalid or revoked refresh token");
+        }
+
         // Generate new tokens for the user
         final TokenResponse newTokenResponse = generateTokenResponse(username);
 
-        // Save the new refresh token in the database and revoke the old one
-        saveUserToken(user, newTokenResponse.getRefreshToken());
+        // Update the database to revoke the old refresh token and save the new one
+        updateTokensForUserTransaction(user, newTokenResponse.getRefreshToken());
+
         this.tokenDAO.revokeAllUserTokens(user);
+        saveUserToken(user, newTokenResponse.getRefreshToken());
 
         return newTokenResponse;
     }
@@ -151,9 +160,10 @@ public class AuthService {
      */
     private User createUserTransaction(RegisterRequest credentials) 
     throws DAOException {
-        try {
-            // Obtain a connection and start a transaction
-            Connection conn = peopleDAO.getConnection();
+        // Obtain a connection and start a transaction
+        try (Connection conn = peopleDAO.getConnection()) {            
+
+            // Set auto-commit to false to manage the transaction manually
             conn.setAutoCommit(false); 
 
             // Create person record
@@ -422,6 +432,28 @@ public class AuthService {
         }
     }
 
+    private void updateTokensForUserTransaction(User user, String newRefreshToken)
+    throws DAOException {
+        // Obtain a connection and start a transaction
+        try (Connection conn = this.tokenDAO.getConnection()) {
+            // Set auto-commit to false to manage the transaction manually
+            conn.setAutoCommit(false);
+
+            // Revoke all existing tokens for the user
+            this.tokenDAO.revokeAllUserTokens(user);
+
+            // Save the new refresh token in the database
+            saveUserToken(user, newRefreshToken);
+            
+            // Commit the transaction if everything is successful
+            conn.commit();
+
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "Error updating tokens for user: " + user.getUsername(), e);
+            throw new DAOException(e);
+        }
+    }
+
     private void saveUserToken(User user, String refreshToken) 
     throws DAOException {
         Token token = new Token();
@@ -431,4 +463,5 @@ public class AuthService {
 
         this.tokenDAO.create(token);
     }
+
 }

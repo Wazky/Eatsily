@@ -22,7 +22,7 @@ public class JwtUtil {
     private final SecretKey SECRET_KEY;
 
     // Token expiration (in milliseconds)
-    private static final long EXPIRATION_TIME = 2 * 60 * 60 * 1000; // 2 hours
+    private static final long EXPIRATION_TIME = 15 * 60 * 1000; // 15 minutes
 
     // Token prefix for the Authorization header
     private static final String TOKEN_PREFIX = "Bearer ";

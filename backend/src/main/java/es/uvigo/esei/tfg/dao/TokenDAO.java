@@ -161,6 +161,10 @@ public class TokenDAO extends DAO {
         }
     }
 
+    public Connection getConnection() throws SQLException {
+        return super.getConnection();
+    }
+
 	//============   AUXILIARY   ============
 
     private Token rowToEntity(ResultSet result) throws SQLException {
