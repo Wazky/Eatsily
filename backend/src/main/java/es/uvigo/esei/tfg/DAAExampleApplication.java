@@ -10,9 +10,10 @@ import java.util.stream.Stream;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import es.uvigo.esei.tfg.rest.AuthResource;
 import es.uvigo.esei.tfg.rest.PeopleResource;
 import es.uvigo.esei.tfg.rest.UsersResource;
-import es.uvigo.esei.tfg.rest.PetResource;
+import es.uvigo.esei.tfg.security.JwtAuthenticationFilter;
 
 /**
  * Configuration of the REST application. This class includes the resources and
@@ -28,7 +29,8 @@ public class DAAExampleApplication extends Application {
 		return Stream.of(
 			PeopleResource.class,
 			UsersResource.class,
-			PetResource.class
+			AuthResource.class,
+			JwtAuthenticationFilter.class
 
 		).collect(toSet());
 	}

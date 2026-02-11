@@ -8,13 +8,22 @@ import static java.util.Objects.requireNonNull;
  * @author DRM
  */
 public class Person {
-	private int id;
+	private long id;
 	private String name;
 	private String surname;
 	
 	// Constructor needed for the JSON conversion
-	Person() {}
+	public Person() {}
 	
+	public Person(long id) {
+		this.id = id;
+	}
+	
+	public Person(String name, String surname) {
+		this.setName(name);
+		this.setSurname(surname);
+	}
+
 	/**
 	 * Constructs a new instance of {@link Person}.
 	 *
@@ -22,7 +31,7 @@ public class Person {
 	 * @param name name of the person.
 	 * @param surname surname of the person.
 	 */
-	public Person(int id, String name, String surname) {
+	public Person(long id, String name, String surname) {
 		this.id = id;
 		this.setName(name);
 		this.setSurname(surname);
@@ -33,8 +42,17 @@ public class Person {
 	 * 
 	 * @return the identifier of the person.
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
+	}
+
+	/**
+	 * Set the identifier of this person.
+	 * 
+	 * @param id the new identifier of the person.
+	 */
+	public void setId(long id) {
+		this.id = requireNonNull(id, "Id can't be null");
 	}
 
 	/**
@@ -79,7 +97,7 @@ public class Person {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 

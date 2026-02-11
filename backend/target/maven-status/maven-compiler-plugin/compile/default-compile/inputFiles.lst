@@ -1,15 +1,27 @@
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\DAAExampleApplication.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\DAO.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\DAOException.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\PeopleDAO.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\PetDAO.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\UsersDAO.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Person.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Pet.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Species.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\User.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\rest\CORSFilter.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\rest\PeopleResource.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\rest\PetResource.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\rest\UsersResource.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\services\PetService.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\DAAExampleApplication.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dao\DAO.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dao\PeopleDAO.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dao\PetDAO.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dao\TokenDAO.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dao\UsersDAO.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dto\auth\AuthResponse.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dto\auth\LoginRequest.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dto\auth\RegisterRequest.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dto\TokenResponse.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\dto\UserResponse.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\entities\Person.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\entities\Pet.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\entities\Species.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\entities\Token.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\entities\User.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\exceptions\AccountBlockedException.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\exceptions\AuthenticationException.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\exceptions\DAOException.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\rest\AuthResource.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\rest\PeopleResource.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\rest\UsersResource.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\security\CORSFilter.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\security\JwtAuthenticationFilter.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\security\Secured.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\services\AuthService.java
+C:\Users\ismae\OneDrive - Universidade de Vigo\Escritorio\Programing\TFG\Eatsily\Eatsily\backend\src\main\java\es\uvigo\esei\tfg\util\JwtUtil.java

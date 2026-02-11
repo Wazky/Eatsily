@@ -1,0 +1,3 @@
+127.0.0.1 - - [10/Feb/2026:20:56:51 +0100] "GET /cargocpc/index.html HTTP/1.1" 200 124
+0:0:0:0:0:0:0:1 - - [10/Feb/2026:20:57:08 +0100] "POST /DAAExample/rest/auth/login HTTP/1.1" 200 465
+0:0:0:0:0:0:0:1 - - [10/Feb/2026:20:57:10 +0100] "GET /DAAExample/rest/auth/securedPing HTTP/1.1" 200 40

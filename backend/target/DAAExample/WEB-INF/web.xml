@@ -31,6 +31,7 @@
     <url-pattern>/rest/*</url-pattern>
   </filter-mapping>
 
+  <!--
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Protected Area</web-resource-name>
@@ -60,6 +61,7 @@
     </auth-constraint>
   </security-constraint>
 
+-->
   <!-- Security roles referenced by this web application -->
   <security-role>
     <role-name>ADMIN</role-name>

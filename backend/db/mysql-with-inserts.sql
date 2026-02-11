@@ -2,57 +2,82 @@ DROP DATABASE IF EXISTS `daaexample`;
 CREATE DATABASE `daaexample`;
 
 CREATE TABLE `daaexample`.`people` (
-	`id` int NOT NULL AUTO_INCREMENT,
+	`id_person` BIGINT NOT NULL AUTO_INCREMENT,
 	`name` varchar(50) NOT NULL,
 	`surname` varchar(100) NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `daaexample`.`users` (
-	`login` varchar(100) NOT NULL,
-	`password` varchar(64) NOT NULL,
-	`role` varchar(10) NOT NULL,
-	PRIMARY KEY (`login`)
+	`id_user` BIGINT NOT NULL AUTO_INCREMENT,
+	`username` VARCHAR(50) UNIQUE NOT NULL, 
+	`password_hash`VARCHAR(255) NOT NULL,
+	`email` VARCHAR(100) NOT NULL,
+	`role` VARCHAR(20) NOT NULL,
+	`active` BOOLEAN NOT NULL DEFAULT TRUE,
+	`blocked` BOOLEAN NOT NULL DEFAULT FALSE,
+	`failed_login_attempts` INT NOT NULL DEFAULT 0,
+	`creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`last_login` TIMESTAMP NULL,
+	`person_id` BIGINT NOT NULL,
+	PRIMARY KEY (`id_user`),
+	FOREIGN KEY (`person_id`) REFERENCES `people`(`id_person`) ON DELETE CASCADE,
+	INDEX `idx_username` (`username`),
+	INDEX `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `daaexample`.`pets` (
-	`pet_id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(50) NOT NULL,
-	`specie` enum('DOG','CAT','BIRD','RABBIT','OTHER') NOT NULL,
-	`breed` varchar(50),
-	`owner_id` int,
-	PRIMARY KEY (`pet_id`),
-	FOREIGN KEY (`owner_id`) REFERENCES `people`(`id`) ON DELETE CASCADE
+CREATE TABLE `daaexample`.`tokens` (
+	`id_token` BIGINT NOT NULL AUTO_INCREMENT,
+	`token` VARCHAR(255) NOT NULL,
+	`token_type` VARCHAR(20) NOT NULL,
+	`expired` BOOLEAN NOT NULL DEFAULT FALSE,
+	`revoked` BOOLEAN NOT NULL DEFAULT FALSE,
+	`user_id` BIGINT NOT NULL,
+	PRIMARY KEY (`id_token`),
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id_user`) ON DELETE CASCADE,
+	INDEX `idx_token` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 CREATE USER IF NOT EXISTS 'daa'@'localhost' IDENTIFIED WITH mysql_native_password BY 'daa';
 GRANT ALL ON `daaexample`.* TO 'daa'@'localhost';
 
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Antón','Pérez');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Manuel','Martínez');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Laura','Reboredo');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Perico','Palotes');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Ana','María');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'María','Nuevo');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Alba','Fernández');
-INSERT INTO `daaexample`.`people` (`id`,`name`,`surname`) VALUES (0,'Asunción','Jiménez');
+USE `daaexample`;
 
--- The password for each user is its login suffixed with "pass". For example, user "admin" has the password "adminpass".
-INSERT INTO `daaexample`.`users` (`login`,`password`,`role`)
-VALUES ('admin', '713bfda78870bf9d1b261f565286f85e97ee614efe5f0faf7c34e7ca4f65baca','ADMIN');
-INSERT INTO `daaexample`.`users` (`login`,`password`,`role`)
-VALUES ('normal', '7bf24d6ca2242430343ab7e3efb89559a47784eea1123be989c1b2fb2ef66e83','USER');
+-- Insertar datos en la tabla 'people'
+INSERT INTO `people` (`name`, `surname`) VALUES
+('Juan', 'Pérez García'),
+('María', 'López Martínez'),
+('Carlos', 'Rodríguez Fernández'),
+('Ana', 'Gómez Sánchez'),
+('Pedro', 'Martín Díaz'),
+('Laura', 'Hernández Ruiz'),
+('Miguel', 'Jiménez Castro'),
+('Elena', 'Torres Ortega'),
+('David', 'Navarro Ramos'),
+('Sofía', 'Romero Molina'),
+('Javier', 'Morales Gil'),
+('Carmen', 'Serrano Vázquez'),
+('Daniel', 'Ortega Blanco'),
+('Patricia', 'Delgado Márquez'),
+('Francisco', 'Castro Herrera'),
+('Isabel', 'Santos Peña'),
+('Alejandro', 'Gutiérrez Rojas'),
+('Teresa', 'Reyes Cabrera'),
+('Raúl', 'Luna Campos'),
+('Beatriz', 'Marín León');
 
-
-INSERT INTO `daaexample`.`pets` (`pet_id`, `name`, `specie`, `breed`, `owner_id`)
-VALUES (0, 'Tweety', 'BIRD', 'Canary', 1);
-INSERT INTO `daaexample`.`pets` (`pet_id`, `name`, `specie`, `breed`, `owner_id`)
-VALUES (0, 'Max', 'DOG', 'Golden Retriever', 1);
-INSERT INTO `daaexample`.`pets` (`pet_id`, `name`, `specie`, `breed`, `owner_id`)
-VALUES (0, 'Mittens', 'CAT', 'Siamese', 3);
-INSERT INTO `daaexample`.`pets` (`pet_id`, `name`, `specie`, `breed`, `owner_id`)
-VALUES (0, 'Bella', 'DOG', 'Bulldog', 5);
-INSERT INTO `daaexample`.`pets` (`pet_id`, `name`, `specie`, `breed`, `owner_id`)
-VALUES (0, 'Coco', 'OTHER', 'Holland Lop', 7);
-
+-- Insertar datos en la tabla 'users' (las contraseñas son "password123" encriptadas con BCrypt)
+-- Nota: BCrypt genera hashes diferentes cada vez, así que estos son ejemplos
+INSERT INTO `users` (`username`, `password_hash`, `email`, `role`, `active`, `blocked`, `failed_login_attempts`, `person_id`) VALUES
+('juanpg', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'juan.perez@example.com', 'ADMIN', TRUE, FALSE, 0, 1),
+('marialm', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'maria.lopez@example.com', 'USER', TRUE, FALSE, 0, 2),
+('carlosrf', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'carlos.rodriguez@example.com', 'USER', TRUE, FALSE, 0, 3),
+('anags', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'ana.gomez@example.com', 'USER', TRUE, FALSE, 0, 4),
+('pedromd', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'pedro.martin@example.com', 'USER', FALSE, TRUE, 5, 5),
+('laurahr', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'laura.hernandez@example.com', 'MODERATOR', TRUE, FALSE, 2, 6),
+('migueljc', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'miguel.jimenez@example.com', 'USER', TRUE, FALSE, 0, 7),
+('elenato', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'elena.torres@example.com', 'USER', TRUE, FALSE, 1, 8),
+('davidnr', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'david.navarro@example.com', 'USER', TRUE, FALSE, 0, 9),
+('sofiar', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'sofia.romero@example.com', 'USER', TRUE, FALSE, 0, 10);
 

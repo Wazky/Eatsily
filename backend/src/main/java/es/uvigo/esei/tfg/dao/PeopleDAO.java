@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import es.uvigo.esei.tfg.entities.Person;
+import es.uvigo.esei.tfg.exceptions.DAOException;
 
 /**
  * DAO class for the {@link Person} entities.
@@ -21,6 +22,81 @@ import es.uvigo.esei.tfg.entities.Person;
 public class PeopleDAO extends DAO {
 	private final static Logger LOG = Logger.getLogger(PeopleDAO.class.getName());
 	
+	//============     CREATE     ============
+
+	/**
+	 * Persists a new person in the system. An identifier will be assigned
+	 * automatically to the new person.
+	 * 
+	 * @param name name of the new person. Can't be {@code null}.
+	 * @param surname surname of the new person. Can't be {@code null}.
+	 * @return a {@link Person} entity representing the persisted person.
+	 * @throws DAOException if an error happens while persisting the new person.
+	 * @throws IllegalArgumentException if the name or surname are {@code null}.
+	 */
+	public Person create(String name, String surname)
+	throws DAOException, IllegalArgumentException {
+		if (name == null || surname == null) {
+			throw new IllegalArgumentException("name and surname can't be null");
+		}
+		
+		try (Connection conn = this.getConnection()) {
+			final String query = "INSERT INTO people VALUES(null, ?, ?)";
+			
+			try (PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+				statement.setString(1, name);
+				statement.setString(2, surname);
+				
+				if (statement.executeUpdate() == 1) {
+					try (ResultSet resultKeys = statement.getGeneratedKeys()) {
+						if (resultKeys.next()) {
+							return new Person(resultKeys.getInt(1), name, surname);
+						} else {
+							LOG.log(Level.SEVERE, "Error retrieving inserted id");
+							throw new SQLException("Error retrieving inserted id");
+						}
+					}
+				} else {
+					LOG.log(Level.SEVERE, "Error inserting value");
+					throw new SQLException("Error inserting value");
+				}
+			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Error adding a person", e);
+			throw new DAOException(e);
+		}
+	}
+
+	public Person create(Connection conn, String name, String surname) 
+	throws SQLException, IllegalArgumentException {
+		if (name == null || surname == null) {
+			throw new IllegalArgumentException("name and surname can't be null");
+		}
+
+		final String query = "INSERT INTO people VALUES(null, ?, ?)";
+
+		try (PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+			statement.setString(1, name);
+			statement.setString(2, surname);
+			
+			if (statement.executeUpdate() == 1) {
+				try (ResultSet resultKeys = statement.getGeneratedKeys()) {
+					if (resultKeys.next()) {
+						return new Person(resultKeys.getInt(1), name, surname);
+					} else {
+						LOG.log(Level.SEVERE, "Error retrieving inserted id");
+						throw new SQLException("Error retrieving inserted id");
+					}
+				}
+			} else {
+				LOG.log(Level.SEVERE, "Error inserting value");
+				throw new SQLException("Error inserting value");
+			}
+		}
+	}
+
+	//============     READ     ============
+
 	/**
 	 * Returns a person stored persisted in the system.
 	 * 
@@ -30,13 +106,13 @@ public class PeopleDAO extends DAO {
 	 * @throws IllegalArgumentException if the provided id does not corresponds
 	 * with any persisted person.
 	 */
-	public Person get(int id)
+	public Person get(long id)
 	throws DAOException, IllegalArgumentException {
 		try (final Connection conn = this.getConnection()) {
-			final String query = "SELECT * FROM people WHERE id=?";
+			final String query = "SELECT * FROM people WHERE id_person=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
-				statement.setInt(1, id);
+				statement.setLong(1, id);
 				
 				try (final ResultSet result = statement.executeQuery()) {
 					if (result.next()) {
@@ -79,49 +155,10 @@ public class PeopleDAO extends DAO {
 		}
 	}
 	
-	/**
-	 * Persists a new person in the system. An identifier will be assigned
-	 * automatically to the new person.
-	 * 
-	 * @param name name of the new person. Can't be {@code null}.
-	 * @param surname surname of the new person. Can't be {@code null}.
-	 * @return a {@link Person} entity representing the persisted person.
-	 * @throws DAOException if an error happens while persisting the new person.
-	 * @throws IllegalArgumentException if the name or surname are {@code null}.
-	 */
-	public Person add(String name, String surname)
-	throws DAOException, IllegalArgumentException {
-		if (name == null || surname == null) {
-			throw new IllegalArgumentException("name and surname can't be null");
-		}
-		
-		try (Connection conn = this.getConnection()) {
-			final String query = "INSERT INTO people VALUES(null, ?, ?)";
-			
-			try (PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-				statement.setString(1, name);
-				statement.setString(2, surname);
-				
-				if (statement.executeUpdate() == 1) {
-					try (ResultSet resultKeys = statement.getGeneratedKeys()) {
-						if (resultKeys.next()) {
-							return new Person(resultKeys.getInt(1), name, surname);
-						} else {
-							LOG.log(Level.SEVERE, "Error retrieving inserted id");
-							throw new SQLException("Error retrieving inserted id");
-						}
-					}
-				} else {
-					LOG.log(Level.SEVERE, "Error inserting value");
-					throw new SQLException("Error inserting value");
-				}
-			}
-		} catch (SQLException e) {
-			LOG.log(Level.SEVERE, "Error adding a person", e);
-			throw new DAOException(e);
-		}
-	}
-	
+	// Add specific read methods if needed
+
+	//============     UPDATE     ============
+
 	/**
 	 * Modifies a person previously persisted in the system. The person will be
 	 * retrieved by the provided id and its current name and surname will be
@@ -131,19 +168,19 @@ public class PeopleDAO extends DAO {
 	 * @throws DAOException if an error happens while modifying the new person.
 	 * @throws IllegalArgumentException if the person is {@code null}.
 	 */
-	public void modify(Person person)
+	public void update(Person person)
 	throws DAOException, IllegalArgumentException {
 		if (person == null) {
 			throw new IllegalArgumentException("person can't be null");
 		}
 		
 		try (Connection conn = this.getConnection()) {
-			final String query = "UPDATE people SET name=?, surname=? WHERE id=?";
+			final String query = "UPDATE people SET name=?, surname=? WHERE id_person=?";
 			
 			try (PreparedStatement statement = conn.prepareStatement(query)) {
 				statement.setString(1, person.getName());
 				statement.setString(2, person.getSurname());
-				statement.setInt(3, person.getId());
+				statement.setLong(3, person.getId());
 				
 				if (statement.executeUpdate() != 1) {
 					throw new IllegalArgumentException("name and surname can't be null");
@@ -155,6 +192,10 @@ public class PeopleDAO extends DAO {
 		}
 	}
 	
+	// Add specific update methods if needed
+
+	//============     DELETE     ============
+
 	/**
 	 * Removes a persisted person from the system.
 	 * 
@@ -163,13 +204,13 @@ public class PeopleDAO extends DAO {
 	 * @throws IllegalArgumentException if the provided id does not corresponds
 	 * with any persisted person.
 	 */
-	public void delete(int id)
+	public void delete(long id)
 	throws DAOException, IllegalArgumentException {
 		try (final Connection conn = this.getConnection()) {
-			final String query = "DELETE FROM people WHERE id=?";
+			final String query = "DELETE FROM people WHERE id_person=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
-				statement.setInt(1, id);
+				statement.setLong(1, id);
 				
 				if (statement.executeUpdate() != 1) {
 					throw new IllegalArgumentException("Invalid id");
@@ -181,13 +222,29 @@ public class PeopleDAO extends DAO {
 		}
 	}
 	
+	// Add specific delete methods if needed
 
-	public boolean exists(int id) throws DAOException{
+	//============ OTHER METHODS  ============
+
+	
+	//============   AUXILIARY   ============
+
+	/**
+	 * Obtain a connection from the connection pool.
+	 * @return an open connection to the database.
+	 * @throws SQLException if an error happens while establishing the connection with the database.
+	 */
+	public Connection getConnection() throws SQLException {
+		return super.getConnection();
+	}
+
+
+	public boolean exists(long id) throws DAOException{
 		try (final Connection conn = this.getConnection()) {
-			final String query = "SELECT 1 FROM people WHERE id=?";
+			final String query = "SELECT 1 FROM people WHERE id_person=?";
 
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
-				statement.setInt(1, id);
+				statement.setLong(1, id);
 
 				try (final ResultSet result = statement.executeQuery()) {
 					return result.next();
@@ -201,7 +258,7 @@ public class PeopleDAO extends DAO {
 
 	private Person rowToEntity(ResultSet row) throws SQLException {
 		return new Person(
-			row.getInt("id"),
+			row.getLong("id_person"),
 			row.getString("name"),
 			row.getString("surname")
 		);

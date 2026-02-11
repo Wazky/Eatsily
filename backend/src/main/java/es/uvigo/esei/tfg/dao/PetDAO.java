@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import es.uvigo.esei.tfg.entities.Pet;
 import es.uvigo.esei.tfg.entities.Species;
+import es.uvigo.esei.tfg.exceptions.DAOException;
 
 /**
  * DAO class for the {@link Pet} entities.
