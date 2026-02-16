@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import es.uvigo.esei.tfg.dto.TokenResponse;
 import es.uvigo.esei.tfg.dto.UserResponse;
-import nl.jqno.equalsverifier.internal.lib.bytebuddy.description.field.FieldDescription.Token;
 
 public class AuthResponse implements Serializable{
     
