@@ -1,17 +1,29 @@
 import { useContext, createContext, useState, useEffect } from "react";
+import useAuth from "../hooks/auth/useAuth";
 
 // Create the AuthContext
 const AuthContext = createContext(null);
 
 export function AuthProvider({children}) {
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const auth = useAuth();
     
     return (
-        <AuthContext.Provider value={{ isAuthenticated }}>
+        <AuthContext.Provider value={auth}>
             {children}
         </AuthContext.Provider>
     );
+};
+
+export function useAuthContext() {
+
+    const context = useContext(AuthContext);
+
+    if (!context) {
+        throw new Error("useAuthContext must be used within an AuthProvider");
+    }
+
+    return context;
 }
 
-export const useAuth = () => useContext(AuthContext);
+export default useAuthContext;

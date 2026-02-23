@@ -4,11 +4,11 @@ package es.uvigo.esei.tfg.services;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.validation.ValidationException;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -16,6 +16,7 @@ import es.uvigo.esei.tfg.dao.PeopleDAO;
 import es.uvigo.esei.tfg.dao.TokenDAO;
 import es.uvigo.esei.tfg.dao.UsersDAO;
 import es.uvigo.esei.tfg.dto.auth.LoginRequest;
+import es.uvigo.esei.tfg.dto.ErrorResponse;
 import es.uvigo.esei.tfg.dto.TokenResponse;
 import es.uvigo.esei.tfg.dto.UserResponse;
 import es.uvigo.esei.tfg.dto.auth.AuthResponse;
@@ -25,6 +26,7 @@ import es.uvigo.esei.tfg.entities.Token;
 import es.uvigo.esei.tfg.entities.User;
 import es.uvigo.esei.tfg.exceptions.AccountBlockedException;
 import es.uvigo.esei.tfg.exceptions.AuthenticationException;
+import es.uvigo.esei.tfg.exceptions.ValidationException;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 import es.uvigo.esei.tfg.util.JwtUtil;
 
@@ -66,16 +68,38 @@ public class AuthService {
         // Validate registration data
         validateRegisterData(credentials);
         
+        // Check for existing username 
         String username = credentials.getUsername();
         if (usersDAO.existsByUsername(username)) {
             LOG.warning("Attempt to register with existing username: " + username);
-            throw new ValidationException("Username already exists");
+            
+            Map<String, Object> details = new HashMap<>();
+            details.put("field", "username");
+
+            throw new ValidationException(
+                new ErrorResponse(
+                    "REG_003",
+                    "Username already exists",
+                    details
+                )
+            );
         }
         
+        // Check for existing email
         String email = credentials.getEmail();
         if (usersDAO.existsByEmail(email)) {
             LOG.warning("Attempt to register with existing email: " + email);
-            throw new ValidationException("Email already exists");
+
+            Map<String, Object> details = new HashMap<>();
+            details.put("field", "email");
+
+            throw new ValidationException(
+                new ErrorResponse(
+                    "REG_004",
+                    "Email already exists",
+                    details
+                )
+            );
         }
 
         // Create user and associated person record in a transaction
@@ -102,6 +126,32 @@ public class AuthService {
 
         // Generate and return the authentication response with tokens and user info
         return generateAuthResponse(user, "login");
+    }
+
+    /**
+     * Logs out the user by revoking their active tokens in the database.
+     * - (IT REVOKES ALL TOKENS FOR USER STORED
+     *  Needs adjustement to just revoke the refresh token associated 
+     *  with the current session if we want to allow multiple sessions)
+     * @throws DAOException
+     */
+    public void logout(String authHeader) 
+    throws IllegalArgumentException, DAOException {
+    
+        String token = jwtUtil.extractTokenFromHeader(authHeader);
+        if (token == null) {
+            LOG.warning("Missing or invalid Authorization header for logout");
+            throw new IllegalArgumentException("Missing or invalid Authorization header");
+        }
+
+        String username = jwtUtil.getUsernameFromToken(token);
+        if (username == null) {
+            LOG.warning("Invalid token: unable to extract username for logout");
+            throw new IllegalArgumentException("Invalid token: unable to extract username");
+        }
+
+        final User user = usersDAO.getByUsername(username);
+        tokenDAO.revokeAllUserTokens(user);
     }
 
     public TokenResponse refreshToken(String authHeader) 
@@ -207,7 +257,13 @@ public class AuthService {
         // Validate that username and password are provided
         if (!validateRequiredString(username, "Username") || 
             !validateRequiredString(password, "Password")) {
-            throw new AuthenticationException("Username and password must be provided");
+            
+            throw new AuthenticationException(
+                new ErrorResponse(
+                    "AUTH_001",
+                    "Username and password must be provided"     
+                )
+            );
         }
 
         User user;
@@ -217,18 +273,35 @@ public class AuthService {
         
         } catch (IllegalArgumentException e) {
             LOG.log(Level.FINE, "Authentication failed for non-existing user: " + username);
-            throw new AuthenticationException("Invalid user credentials");
+
+            throw new AuthenticationException(
+                new ErrorResponse(
+                    "AUTH_002",
+                    "Invalid credentials"
+                )
+            );
         }
 
         // Check if user account is blocked
         if (user.isBlocked()) {
             LOG.log(Level.WARNING, "Blocked user attempted to login: " + username);
-            throw new AccountBlockedException("User account is blocked due to multiple failed login attempts");
+            
+            throw new AccountBlockedException(
+                new ErrorResponse(
+                    "AUTH_003",
+                    "User account is blocked due to multiple failed login attempts"
+                )
+            );
         }
 
         // Verify password
         if(!validatePassword(password, user)) {
-            throw new AuthenticationException("Invalid user credentials");
+            throw new AuthenticationException(
+                new ErrorResponse(
+                    "AUTH_002",
+                    "Invalid credentials"
+                )
+            );
         }
 
         // Password is correct, reset failed login attempts if any
@@ -257,13 +330,24 @@ public class AuthService {
         // Validate that all required fields are provided
         if (!validateRequiredRegisterData(credentials)) {
             LOG.warning("Missing required registration fields");
-            throw new ValidationException("All required fields must be provided and not empty");
-        }
 
+            throw new ValidationException(
+                new ErrorResponse(
+                    "REG_001",
+                    "All required fields must be provided and not empty"
+                )
+            );
+        }
+        
         // Validate field formats
         if (!validateRegisterDataFormats(credentials)) {
             LOG.warning("Invalid registration data formats for user: " + credentials.getUsername());
-            throw new ValidationException("One or more fields have invalid format");
+            throw new ValidationException(
+                new ErrorResponse(
+                    "REG_002",
+                    "One or more fields have invalid format"
+                )
+            );
         }
 
     }   
@@ -289,7 +373,12 @@ public class AuthService {
                 usersDAO.lockUserAccount(user.getId());
                 LOG.log(Level.WARNING, "User account locked due to multiple failed login attempts: " + user.getUsername());
                 
-                throw new AccountBlockedException("User account is blocked due to multiple failed login attempts");
+                throw new AccountBlockedException(
+                    new ErrorResponse(
+                        "AUTH_003",
+                        "User account is blocked due to multiple failed login attempts"
+                    )
+                );
             }
 
             return false;
@@ -334,13 +423,33 @@ public class AuthService {
         // Validate email format
         if (!credentials.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             LOG.warning("Invalid email format: " + credentials.getEmail());
-            throw new ValidationException("Invalid email format");            
+
+            Map<String, Object> details = new HashMap<>();
+            details.put("field", "email");
+
+            throw new ValidationException(
+                new ErrorResponse(
+                    "VALIDATION.INVALID_EMAIL_FORMAT",
+                    "Invalid email format",
+                    details
+                )
+            );            
         }
 
         // Validate password strength (at least 8 characters, including letters and numbers)
         if (!credentials.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
             LOG.warning("Weak password provided for user: " + credentials.getUsername());
-            throw new ValidationException("Password must be at least 8 characters long and include both letters and numbers");
+
+            Map<String, Object> details = new HashMap<>();
+            details.put("field", "password");
+
+            throw new ValidationException(
+                new ErrorResponse(
+                    "VALIDATION.INVALID_PASSWORD_FORMAT",
+                    "Password must be at least 8 characters long and include both letters and numbers",
+                    details
+                )
+            );
         }
 
         // Additional format validations can be added here (e.g., username format, name/surname format)
@@ -405,7 +514,7 @@ public class AuthService {
     }
 
     private AuthResponse generateAuthResponse(User user, String type) 
-    throws DAOException {
+    throws IllegalArgumentException, DAOException {
 
         // Generate user response
         UserResponse userResponse = new UserResponse(

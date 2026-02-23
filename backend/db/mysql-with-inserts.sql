@@ -1,6 +1,8 @@
 DROP DATABASE IF EXISTS `daaexample`;
 CREATE DATABASE `daaexample`;
 
+-- ========== Tables structure for database `daaexample` ==========
+
 CREATE TABLE `daaexample`.`people` (
 	`id_person` BIGINT NOT NULL AUTO_INCREMENT,
 	`name` varchar(50) NOT NULL,
@@ -42,6 +44,9 @@ CREATE TABLE `daaexample`.`tokens` (
 CREATE USER IF NOT EXISTS 'daa'@'localhost' IDENTIFIED WITH mysql_native_password BY 'daa';
 GRANT ALL ON `daaexample`.* TO 'daa'@'localhost';
 
+
+-- ========== Initial data for database `daaexample` ==========
+
 USE `daaexample`;
 
 -- Insertar datos en la tabla 'people'
@@ -81,3 +86,33 @@ INSERT INTO `users` (`username`, `password_hash`, `email`, `role`, `active`, `bl
 ('davidnr', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'david.navarro@example.com', 'USER', TRUE, FALSE, 0, 9),
 ('sofiar', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'sofia.romero@example.com', 'USER', TRUE, FALSE, 0, 10);
 
+
+-- ========== Events for database `daaexample` ==========
+
+-- sActivate event scheduler
+SET GLOBAL event_scheduler = ON;
+
+-- Create a event to clean up expired tokens every day at midnight
+DELIMITER $$
+
+CREATE EVENT IF NOT EXISTS `clean_expired_tokens_daily`
+ON SCHEDULE EVERY 1 DAY
+STARTS TIMESTAMP(CURRENT_DATE, '00:00:00')
+DO
+BEGIN
+	DELETE FROM `daaexample`.`tokens`
+	WHERE `expired` = TRUE OR `revoked` = TRUE;
+END $$
+
+-- Create an event to reset failed login attempts every hour
+CREATE EVENT IF NOT EXISTS `reset_failed_logins_hourly`
+ON SCHEDULE EVERY 1 HOUR
+STARTS CURRENT_TIMESTAMP
+DO
+	UPDATE `daaexample`.`users`
+	SET `failed_login_attempts` = 0
+	WHERE `failed_login_attempts` > 0;
+END $$
+
+
+DELIMITER ;

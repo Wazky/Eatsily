@@ -6,28 +6,34 @@ import { initReactI18next } from 'react-i18next';
 // English translations
 import enAuth from '../i18n/locales/en/auth.json';
 import enCommon from '../i18n/locales/en/common.json';
+import enErrors from '../i18n/locales/en/errors.json';
 
 // Spanish translations
 import esAuth from '../i18n/locales/es/auth.json';
 import esCommon from '../i18n/locales/es/common.json';
+import esErrors from '../i18n/locales/es/errors.json';
 
 // Galician translations
 import glAuth from '../i18n/locales/gl/auth.json';
 import glCommon from '../i18n/locales/gl/common.json';
+import glErrors from '../i18n/locales/gl/errors.json';
 
 // Combine translations into a single object
 const resources = {
     en: {
         auth: enAuth,
-        common: enCommon
+        common: enCommon,
+        errors: enErrors
     },
     es: {
         auth: esAuth,
-        common: esCommon
+        common: esCommon,
+        errors: esErrors
     },
     gl: {
         auth: glAuth,
-        common: glCommon
+        common: glCommon,
+        errors: glErrors
     }
 };
 

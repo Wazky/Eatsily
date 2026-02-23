@@ -1,0 +1,5 @@
+{
+    "AUTH_001": "Nombre de usuario o contraseña no válidos",
+    "AUTH_002": "Cuenta bloqueada",
+    "SYS_001": "Error interno del servidor"
+}
