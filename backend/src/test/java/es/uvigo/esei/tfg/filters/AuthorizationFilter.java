@@ -88,7 +88,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	
 	private static Response createResponse() {
 		return Response.status(Status.UNAUTHORIZED)
-			.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"DAAExample\"")
+			.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Eatsily\"")
 			.entity("Page requires login.")
 		.build();
 	}

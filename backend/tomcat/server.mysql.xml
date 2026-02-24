@@ -138,9 +138,9 @@
 
       <Realm className="org.apache.catalina.realm.JDBCRealm"
              driverName="com.mysql.jdbc.Driver"
-             connectionURL="jdbc:mysql://localhost/daaexample?useSSL=false"
-             connectionName="daa"
-             connectionPassword="daa"
+             connectionURL="jdbc:mysql://localhost/eatsily?useSSL=false"
+             connectionName="eatsily_user"
+             connectionPassword="eatsily_password"
              userTable="users" userNameCol="login" userCredCol="password"
              userRoleTable="users" roleNameCol="role" digest="SHA-256">
              <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler"

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.uvigo.esei.tfg</groupId>
-	<artifactId>eatsily</artifactId>
+	<artifactId>Eatsily</artifactId>
 	<packaging>war</packaging>
 	<version>0.1.19</version>
 	<name>Eatsily</name>
@@ -196,7 +196,7 @@
 	</reporting>
 
 	<build>
-		<finalName>DAAExample</finalName>
+		<finalName>Eatsily</finalName>
 
 		<plugins>
 			<plugin>
@@ -405,11 +405,11 @@
 								<properties>
 									<cargo.servlet.port>9080</cargo.servlet.port>
 									<cargo.datasource.datasource.h2>
-										cargo.datasource.jndi=jdbc/daaexample|
+										cargo.datasource.jndi=jdbc/eatsily|
 										cargo.datasource.driver=com.mysql.jdbc.Driver|
-										cargo.datasource.url=jdbc:mysql://localhost/daaexample?useSSL=false|
-										cargo.datasource.username=daa|
-										cargo.datasource.password=daa|
+										cargo.datasource.url=jdbc:mysql://localhost/eatsily?useSSL=false|
+										cargo.datasource.username=eatsily_user|
+										cargo.datasource.password=eatsily_password|
 										cargo.datasource.maxActive=8|
 										cargo.datasource.maxIdle=4|
 										cargo.datasource.maxWait=10000

@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  */
 public abstract class DAO {
 	private final static Logger LOG = Logger.getLogger(DAO.class.getName());
-	private final static String JNDI_NAME = "java:/comp/env/jdbc/daaexample"; 
+	private final static String JNDI_NAME = "java:/comp/env/jdbc/eatsily"; 
 	
 	private DataSource dataSource;
 	
