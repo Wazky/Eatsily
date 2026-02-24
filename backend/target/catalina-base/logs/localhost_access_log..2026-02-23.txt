@@ -1,0 +1,6 @@
+127.0.0.1 - - [23/Feb/2026:19:49:34 +0100] "GET /cargocpc/index.html HTTP/1.1" 200 124
+0:0:0:0:0:0:0:1 - - [23/Feb/2026:19:54:12 +0100] "POST /DAAExample/rest/auth/login HTTP/1.1" 200 462
+0:0:0:0:0:0:0:1 - - [23/Feb/2026:19:55:23 +0100] "GET /DAAExample/rest/debug/ping?_=1771872840851 HTTP/1.1" 404 998
+0:0:0:0:0:0:0:1 - - [23/Feb/2026:19:56:20 +0100] "GET /DAAExample/rest/auth/debug/ping?_=1771872978523 HTTP/1.1" 200 50
+0:0:0:0:0:0:0:1 - - [23/Feb/2026:19:56:31 +0100] "GET /DAAExample/rest/auth/debug/ping-secured?_=1771872978524 HTTP/1.1" 200 75
+0:0:0:0:0:0:0:1 - - [23/Feb/2026:19:56:37 +0100] "POST /DAAExample/rest/auth/debug/echo-header HTTP/1.1" 403 -

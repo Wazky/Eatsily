@@ -12,8 +12,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import es.uvigo.esei.tfg.dao.DAOException;
 import es.uvigo.esei.tfg.dao.UsersDAO;
+import es.uvigo.esei.tfg.exceptions.DAOException;
+
 /**
  * REST resource for managing users.
  * 
@@ -71,7 +72,7 @@ public class UsersResource {
 		// can access the data of any user.
 		if (loggedUser.equals(login) || this.isAdmin()) {
 			try {
-				return Response.ok(dao.get(login)).build();
+				return Response.ok(dao.getByUsername(login)).build();
 			} catch (IllegalArgumentException iae) {
 				LOG.log(Level.FINE, "Invalid user login in get method", iae);
 				

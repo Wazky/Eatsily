@@ -10,10 +10,12 @@ import java.util.stream.Stream;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import es.uvigo.esei.tfg.rest.AuthResource;
 import es.uvigo.esei.tfg.rest.PeopleResource;
 import es.uvigo.esei.tfg.rest.UsersResource;
 import es.uvigo.esei.tfg.rest.PetResource;
 import es.uvigo.esei.tfg.rest.RecipeResource;
+import es.uvigo.esei.tfg.security.JwtAuthenticationFilter;
 
 /**
  * Configuration of the REST application. This class includes the resources and
@@ -30,7 +32,9 @@ public class EatsilyRestApplication extends Application {
 			PeopleResource.class,
 			UsersResource.class,
 			PetResource.class,
-			RecipeResource.class
+			RecipeResource.class,
+			AuthResource.class,
+			JwtAuthenticationFilter.class
 
 		).collect(toSet());
 	}

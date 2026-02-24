@@ -1,0 +1,21 @@
+/**
+ * SMACSS: Index
+ * This is the main CSS file that imports all the other CSS files in the project. 
+ * It is organized in a way that makes it easy to find and edit the styles. 
+ * The styles are grouped by type (base, layout, components, etc.) 
+ * and are named in a way that makes it clear what they are used for. 
+ * This file is imported in the main JavaScript file (main.jsx) and can be used throughout the project.
+*/
+
+/* BASE */
+@import './base/variables.css';
+
+/* LAYOUT */
+
+/* MODULES */
+
+/* STATE */
+@import './state/_hover.css';
+
+/* THEME */
+@import './theme/_colors.css';

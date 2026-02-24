@@ -1,0 +1,113 @@
+:root {
+/* ==========================================================================
+ * COLOR PALETTE 
+ * Based on the following colors:
+ *  - Text: #F4F1DE (warm off-white)
+ *  - Background: #81B29A (sage green)
+ *  - Primary: #3D405B (deep indigo)
+ *  - Secondary: #E07A5F (terracotta)
+ *  - Accent: #FCBA04 (golden yellow)
+ * ========================================================================== */
+
+/* PRIMARY COLOR - 60% of UI
+ * Based on #3D405B (deep indigo) 
+*/
+  --primary-50:  #ecedf2;  /* Lightest - backgrounds, hover states */
+  --primary-100: #d9dae5;
+  --primary-200: #c6c8d8;
+  --primary-300: #a1a4bf;
+  --primary-400: #6b6f95;
+  --primary-500: #3d405b;  /* Base color */
+  --primary-600: #35384f;
+  --primary-700: #2e3043;
+  --primary-800: #262837;
+  --primary-900: #1e202b;  /* Darkest - text on light backgrounds */
+
+/* SECONDARY COLOR - 30% of UI
+ * Based on #E07A5F (terracotta) 
+*/
+  --secondary-50:  #fcf1ed;  /* Lightest */
+  --secondary-100: #f9e3db;
+  --secondary-200: #f6d5c9;
+  --secondary-300: #f0b9a5;
+  --secondary-400: #e89a7e;
+  --secondary-500: #e07a5f;  /* Base color */
+  --secondary-600: #c56c54;
+  --secondary-700: #aa5e49;
+  --secondary-800: #8f4f3e;
+  --secondary-900: #744133;  /* Darkest */
+
+/* ACCENT COLOR - 10% of UI
+ * Based on #FCBA04 (golden yellow) 
+*/
+  --accent-50:   #fff8e5;  /* Lightest */
+  --accent-100:  #fff1cc;
+  --accent-200:  #ffeab3;
+  --accent-300:  #fedc80;
+  --accent-400:  #fdcb4d;
+  --accent-500:  #fcba04;  /* Base color */
+  --accent-600:  #e0a704;
+  --accent-700:  #c49303;
+  --accent-800:  #a87f03;
+  --accent-900:  #8c6b02;  /* Darkest */
+
+/* BACKGROUND COLOR
+ * Based on #81B29A (sage green) 
+*/
+  --background-50:   #f2f8f5;  /* Lightest */
+  --background-100:  #e5f0eb;
+  --background-200:  #d8e9e0;
+  --background-300:  #bed9cc;
+  --background-400:  #9fc6b3;
+  --background-500:  #81b29a;  /* Base color */
+  --background-600:  #719c87;
+  --background-700:  #618674;
+  --background-800:  #517061;
+  --background-900:  #415a4e;  /* Darkest */
+
+/* TEXT COLOR
+ * Based on #F4F1DE (warm off-white) 
+*/
+  --text-50:  #ffffff;  /* Pure white */
+  --text-100: #fefdf9;
+  --text-200: #fdfcf6;
+  --text-300: #fbf9f0;
+  --text-400: #f8f5e7;
+  --text-500: #f4f1de;  /* Base color */
+  --text-600: #d7d4c3;
+  --text-700: #bab7a8;
+  --text-800: #9d9a8d;
+  --text-900: #807d72;  /* Darkest */
+
+/* ==========================================================================
+ * #NEUTRAL COLORS (Warm grays adapted to the palette)
+ * ========================================================================== */
+  --gray-50:   #fafaf8;
+  --gray-100:  #f5f5f2;
+  --gray-200:  #ebebe7;
+  --gray-300:  #dcdcd6;
+  --gray-400:  #c2c2ba;
+  --gray-500:  #a8a89e;
+  --gray-600:  #8e8e82;
+  --gray-700:  #747466;
+  --gray-800:  #5a5a4a;
+  --gray-900:  #40402e;
+
+/* ==========================================================================
+ * #SEMANTIC COLORS
+ * ========================================================================== */
+  --success:       #4caf7f;  /* Green */
+  --success-light: #e8f5ef;
+  --warning:       #ffb74d;  /* Orange */
+  --warning-light: #fff3e0;
+  --error:         #ef5350;  /* Red */
+  --error-light:   #fdeaea;
+  --info:          #5f9ea0;  /* Cadet blue */
+  --info-light:    #eff5f5;
+}
+
+/* Transición suave para todos los elementos */
+.transition-all {
+    transition: all 0.3s ease;
+}
+

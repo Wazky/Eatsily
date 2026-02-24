@@ -14,9 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import es.uvigo.esei.tfg.dao.DAOException;
 import es.uvigo.esei.tfg.dao.PeopleDAO;
 import es.uvigo.esei.tfg.entities.Person;
+import es.uvigo.esei.tfg.exceptions.DAOException;
 
 /**
  * REST resource for managing people.
@@ -110,7 +110,8 @@ public class PeopleResource {
 		@FormParam("surname") String surname
 	) {
 		try {
-			final Person newPerson = this.dao.add(name, surname);
+			
+			final Person newPerson = this.dao.create(name, surname);
 			
 			return Response.ok(newPerson).build();
 		} catch (IllegalArgumentException iae) {
@@ -149,7 +150,7 @@ public class PeopleResource {
 	) {
 		try {
 			final Person modifiedPerson = new Person(id, name, surname);
-			this.dao.modify(modifiedPerson);
+			this.dao.update(modifiedPerson);
 			
 			return Response.ok(modifiedPerson).build();
 		} catch (NullPointerException npe) {
