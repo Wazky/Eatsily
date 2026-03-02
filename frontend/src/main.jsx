@@ -15,8 +15,9 @@ import { ROUTES } from './constants/routes.js'
 import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import LoginPage from './pages/auth/LoginPage.jsx'
 import RegisterPage from './pages/auth/RegisterPage.jsx'
-import DashboardPage from './pages/DashboardPage.jsx'
 import ErrorPage from './pages/ErrorPage.jsx'
+import HomePage from './pages/HomePage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -30,13 +31,17 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: ROUTES.DASHBOARD,
+    path: ROUTES.HOME,
     element: <ProtectedRoute />,
     children: [
       {
-        path: ROUTES.DASHBOARD,
-        element: <DashboardPage />
+        path: ROUTES.HOME,
+        element: <HomePage />
       },
+      {
+        path: ROUTES.PROFILE,
+        element: <ProfilePage />
+      }
     ],
   },
 ])

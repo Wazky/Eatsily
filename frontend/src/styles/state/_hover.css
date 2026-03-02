@@ -1,7 +1,25 @@
 /* Hover State Styles */
 
-.is-hoverable:hover {
+.is-test:hover {
     background-color: rgba(255, 255, 255, 0.6) !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+}
+
+.is-hoverable:hover {
+    filter: brightness(1.2) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    font-weight: bold;
+}
+
+.hover-bright-text:hover {
+    filter: brightness(1.2) !important;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+    transition: text-shadow 0.3s ease;
+}
+
+.hover-bright-icon:hover {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    transition: text-shadow 0.3s ease;
 }

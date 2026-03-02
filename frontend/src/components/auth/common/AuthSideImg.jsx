@@ -7,7 +7,7 @@ export default function AuthSideImg({ imgSrc, altText }) {
         <img
             src={imgSrc}
             alt={altText}
-            className="w-100 h-100 object-fit-cover"
+            className="w-100 h-100 object-cover"
         />
     
     </div>

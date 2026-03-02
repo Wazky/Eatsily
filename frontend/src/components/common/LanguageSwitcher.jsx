@@ -17,6 +17,8 @@ export default function LanguageSwitcher() {
         i18n.changeLanguage(lng);
         localStorage.setItem('language', lng);
     };
+
+    console.log("Current Language:", i18n.language);
     
     return (
         <div className='dropdown m-2'>
@@ -26,13 +28,20 @@ export default function LanguageSwitcher() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
             >
-                <i className="bi bi-globe"></i>
+                <i className="bi bi-globe fs-4"></i>
             </button>
             <ul className="dropdown-menu dropdown-menu-end bg-text-important">
                 {languages.map(lang => (
                     <li key={lang.code}>
                         <button 
-                            className="dropdown-item txt-primary-important fw-bold"
+                            className={`
+                                dropdown-item
+                                d-flex 
+                                align-items-center                                
+                                is-hoverable   
+                                gap-2                                
+                                ${i18n.language === lang.code ? "fw-bold bg-primary-important" : ""}
+                            `}
                             onClick={() => changeLanguage(lang.code)}
                         >
                             <img 

@@ -1,6 +1,5 @@
 package es.uvigo.esei.tfg.services;
 
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,12 +32,15 @@ import es.uvigo.esei.tfg.util.JwtUtil;
 public class AuthService {
 
     private final static long JWT_EXPIRATION_TIME =  15 * 60 * 1000; // 15 minutes
-    private final static long JWT_REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 days
+    private final static long JWT_REFRESH_TOKEN_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days
 
     private final static Logger LOG = Logger.getLogger(AuthService.class.getName());
     private final static int MAX_FAILED_LOGIN_ATTEMPTS = 5;
 
     private final JwtUtil jwtUtil;
+
+    private final UserPersonService userPersonService;
+    private final TokenManagmentService tokenManagmentService;
 
     private final PeopleDAO peopleDAO;
     private final UsersDAO usersDAO;
@@ -46,6 +48,8 @@ public class AuthService {
     
     public AuthService() {
         this.jwtUtil = new JwtUtil();
+        this.userPersonService = new UserPersonService();
+        this.tokenManagmentService = new TokenManagmentService();
         this.peopleDAO = new PeopleDAO();
         this.usersDAO = new UsersDAO();
         this.tokenDAO = new TokenDAO();
@@ -102,8 +106,10 @@ public class AuthService {
             );
         }
 
-        // Create user and associated person record in a transaction
-        return generateAuthResponse(createUserTransaction(credentials), "registration");
+        User user = userPersonService.createUser(credentials);
+
+        // Generate and return authentication response with tokens and user info
+        return generateAuthResponse(user, "registration");
     }
 
     /**
@@ -151,7 +157,7 @@ public class AuthService {
         }
 
         final User user = usersDAO.getByUsername(username);
-        tokenDAO.revokeAllUserTokens(user);
+        tokenManagmentService.revokeUserTokens(user.getId());
     }
 
     public TokenResponse refreshToken(String authHeader) 
@@ -181,62 +187,10 @@ public class AuthService {
         }
 
         // Verify token existence and revocation status in the database
-        Token storedToken = tokenDAO.getByToken(token);
-        if (storedToken == null || storedToken.isRevoked()) {
-            LOG.warning("Refresh token is invalid or revoked for user: " + username);
-            throw new IllegalArgumentException("Invalid or revoked refresh token");
-        }
+        Token storedToken = tokenManagmentService.getByToken(token);
 
-        // Generate new tokens for the user
-        final TokenResponse newTokenResponse = generateTokenResponse(username);
-
-        // Update the database to revoke the old refresh token and save the new one
-        updateTokensForUserTransaction(user, newTokenResponse.getRefreshToken());
-
-        this.tokenDAO.revokeAllUserTokens(user);
-        saveUserToken(user, newTokenResponse.getRefreshToken());
-
-        return newTokenResponse;
-    }
-
-    /**
-     * Creates a new user and the associated person record in the database within a transaction.
-     * This method ensures that both the user and person records are created successfully, 
-     * and if any error occurs, the transaction is rolled back to maintain data integrity.
-     * 
-     * @param credentials the registration credentials containing the user information to be stored in the database.
-     * @return a {@link User} entity representing the newly created user.
-     * @throws DAOException if an error occurs while accessing the data source or if the transaction fails.
-     */
-    private User createUserTransaction(RegisterRequest credentials) 
-    throws DAOException {
-        // Obtain a connection and start a transaction
-        try (Connection conn = peopleDAO.getConnection()) {            
-
-            // Set auto-commit to false to manage the transaction manually
-            conn.setAutoCommit(false); 
-
-            // Create person record
-            final Person person = peopleDAO.create(conn, credentials.getName(), credentials.getSurname());
-
-            // Convert registration credentials to user entity
-            User user = credentialsToUser(credentials);
-            
-            // Associate the created person with the user
-            user.setPerson(person);
-
-            // Create user record
-            user = usersDAO.create(conn, user);
-        
-            conn.commit(); // Commit the transaction if everything is successful
-            LOG.info("User registered successfully: " + user.getUsername());
-
-            return user;
-
-        } catch (SQLException e) {
-            LOG.log(Level.SEVERE, "Error creating user", e);
-            throw new DAOException(e);
-        }
+        // Generate and return new tokens, and revoke the old refresh token in the database
+        return tokenManagmentService.refreshTokens(user);
     }
 
     /**
@@ -474,45 +428,14 @@ public class AuthService {
     }
 
     /**
-     * Converts the provided registration credentials into a {@link User} entity.
+     * Generates an authentication response containing the user information and generated tokens.
      * 
-     * @param credentials the registration credentials to convert.
-     * @return a {@link User} entity with the data from the registration credentials.
+     * @param user the authenticated user for which to generate the authentication response.
+     * @param type the type of authentication response to generate (e.g., "registration" or "login").
+     * @return an authentication response containing the user information and generated tokens.
+     * @throws IllegalArgumentException if the type is not "registration" or "login".
+     * @throws DAOException if an error occurs while generating the tokens.
      */
-    private User credentialsToUser(RegisterRequest credentials) {
-        User user = new User();
-
-        user.setUsername(credentials.getUsername());
-        user.setEmail(credentials.getEmail());
-
-        // Hash the password before storing
-        String passwordHash = BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt());
-        user.setPasswordHash(passwordHash);
-
-        return user;
-    }
-
-    /**
-     * Generates a {@link TokenResponse} containing an access token 
-     * and a refresh token for the given username.
-     * 
-     * @param username the username for which to generate the tokens.
-     * @return a {@link TokenResponse} containing the generated access 
-     * and refresh tokens along with their expiration times.
-     */
-    private TokenResponse generateTokenResponse(String username) {
-        String accessToken = jwtUtil.generateToken(username, JWT_EXPIRATION_TIME);
-        String refreshToken = jwtUtil.generateToken(username, JWT_REFRESH_TOKEN_EXPIRATION_TIME);
-
-
-        return new TokenResponse(
-            accessToken, 
-            refreshToken, 
-            JWT_EXPIRATION_TIME, 
-            JWT_REFRESH_TOKEN_EXPIRATION_TIME
-        );        
-    }
-
     private AuthResponse generateAuthResponse(User user, String type) 
     throws IllegalArgumentException, DAOException {
 
@@ -524,53 +447,18 @@ public class AuthService {
             user.getRole()
         );
         
-        // Generate token response
-        TokenResponse tokenResponse = generateTokenResponse(userResponse.getUsername());
+        // Generate tokens and save refresh token in the database
+        TokenResponse tokenResponse = tokenManagmentService.generateNewTokens(user);
 
-        // Save refresh token in the database
-        saveUserToken(user, tokenResponse.getRefreshToken());
-
-        if ("registration".equals(type)) {
-            return AuthResponse.registrationSuccess(tokenResponse, userResponse);
-
-        } else if ("login".equals(type)) {
-            return AuthResponse.loginSuccess(tokenResponse, userResponse);
-        
-        } else {
-            throw new IllegalArgumentException("Invalid auth response type: " + type);
+        switch (type) {
+            case "registration":
+                return AuthResponse.registrationSuccess(tokenResponse, userResponse);
+            case "login":
+                return AuthResponse.loginSuccess(tokenResponse, userResponse);
+            default:
+                throw new IllegalArgumentException("Invalid auth response type: " + type);
         }
-    }
 
-    private void updateTokensForUserTransaction(User user, String newRefreshToken)
-    throws DAOException {
-        // Obtain a connection and start a transaction
-        try (Connection conn = this.tokenDAO.getConnection()) {
-            // Set auto-commit to false to manage the transaction manually
-            conn.setAutoCommit(false);
-
-            // Revoke all existing tokens for the user
-            this.tokenDAO.revokeAllUserTokens(user);
-
-            // Save the new refresh token in the database
-            saveUserToken(user, newRefreshToken);
-            
-            // Commit the transaction if everything is successful
-            conn.commit();
-
-        } catch (SQLException e) {
-            LOG.log(Level.SEVERE, "Error updating tokens for user: " + user.getUsername(), e);
-            throw new DAOException(e);
-        }
-    }
-
-    private void saveUserToken(User user, String refreshToken) 
-    throws DAOException {
-        Token token = new Token();
-        token.setToken(refreshToken);
-        token.setToken_type("refresh");
-        token.setIdUser(user.getId());
-
-        this.tokenDAO.create(token);
     }
 
 }

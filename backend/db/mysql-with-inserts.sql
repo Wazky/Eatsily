@@ -1,16 +1,16 @@
-DROP DATABASE IF EXISTS `daaexample`;
-CREATE DATABASE `daaexample`;
+DROP DATABASE IF EXISTS `eatsily`;
+CREATE DATABASE `eatsily`;
 
--- ========== Tables structure for database `daaexample` ==========
+-- ========== Tables structure for database `eatsily` ==========
 
-CREATE TABLE `daaexample`.`people` (
+CREATE TABLE `eatsily`.`people` (
 	`id_person` BIGINT NOT NULL AUTO_INCREMENT,
 	`name` varchar(50) NOT NULL,
 	`surname` varchar(100) NOT NULL,
 	PRIMARY KEY (`id_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `daaexample`.`users` (
+CREATE TABLE `eatsily`.`users` (
 	`id_user` BIGINT NOT NULL AUTO_INCREMENT,
 	`username` VARCHAR(50) UNIQUE NOT NULL, 
 	`password_hash`VARCHAR(255) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE `daaexample`.`users` (
 	INDEX `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `daaexample`.`tokens` (
+CREATE TABLE `eatsily`.`tokens` (
 	`id_token` BIGINT NOT NULL AUTO_INCREMENT,
 	`token` VARCHAR(255) NOT NULL,
 	`token_type` VARCHAR(20) NOT NULL,
@@ -40,14 +40,24 @@ CREATE TABLE `daaexample`.`tokens` (
 	INDEX `idx_token` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `eatsily`.`recipes` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`name`varchar(100) NOT NULL,
+	`description` text,
+	`preparation_time` int NOT NULL,
+	`cooking_time` int,
+	`servings` int NOT NULL,
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE USER IF NOT EXISTS 'daa'@'localhost' IDENTIFIED WITH mysql_native_password BY 'daa';
-GRANT ALL ON `daaexample`.* TO 'daa'@'localhost';
+
+CREATE USER IF NOT EXISTS 'eatsily_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'eatsily_password';
+GRANT ALL ON `eatsily`.* TO 'eatsily_user'@'localhost';
 
 
--- ========== Initial data for database `daaexample` ==========
+-- ========== Initial data for database `eatsily` ==========
 
-USE `daaexample`;
+USE `eatsily`;
 
 -- Insertar datos en la tabla 'people'
 INSERT INTO `people` (`name`, `surname`) VALUES
@@ -87,7 +97,7 @@ INSERT INTO `users` (`username`, `password_hash`, `email`, `role`, `active`, `bl
 ('sofiar', '$2a$12$k8L9ZbYq5Q3m6S7dF8G9H0iJ1K2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D', 'sofia.romero@example.com', 'USER', TRUE, FALSE, 0, 10);
 
 
--- ========== Events for database `daaexample` ==========
+-- ========== Events for database `eatsily` ==========
 
 -- sActivate event scheduler
 SET GLOBAL event_scheduler = ON;
@@ -100,7 +110,7 @@ ON SCHEDULE EVERY 1 DAY
 STARTS TIMESTAMP(CURRENT_DATE, '00:00:00')
 DO
 BEGIN
-	DELETE FROM `daaexample`.`tokens`
+	DELETE FROM `eatsily`.`tokens`
 	WHERE `expired` = TRUE OR `revoked` = TRUE;
 END $$
 
@@ -109,7 +119,8 @@ CREATE EVENT IF NOT EXISTS `reset_failed_logins_hourly`
 ON SCHEDULE EVERY 1 HOUR
 STARTS CURRENT_TIMESTAMP
 DO
-	UPDATE `daaexample`.`users`
+BEGIN
+	UPDATE `eatsily`.`users`
 	SET `failed_login_attempts` = 0
 	WHERE `failed_login_attempts` > 0;
 END $$

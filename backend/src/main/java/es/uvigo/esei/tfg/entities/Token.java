@@ -6,7 +6,7 @@ public class Token {
     
     private long id;
     private String token;
-    private String token_type;
+    private String tokenType;
     private boolean expired;
     private boolean revoked;
     private long idUser;
@@ -16,25 +16,25 @@ public class Token {
 
     public Token(
         String token,
-        String token_type,
+        String tokenType,
         long idUser
     ) {
         this.token = token;
-        this.token_type = token_type;
+        this.tokenType = tokenType;
         this.idUser = idUser;
     }
 
     public Token(
         long id,
         String token,
-        String token_type,
+        String tokenType,
         boolean expired,
         boolean revoked,
         long idUser
     ) {
         this.id = id;
         this.token = token;
-        this.token_type = token_type;
+        this.tokenType = tokenType;
         this.expired = expired;
         this.revoked = revoked;
         this.idUser = idUser;
@@ -46,8 +46,8 @@ public class Token {
     public String getToken() { return token; }
     public void setToken(String token) { this.token = requireNonNull(token); }
 
-    public String getToken_type() { return token_type; }
-    public void setToken_type(String token_type) { this.token_type = requireNonNull(token_type); }
+    public String getTokenType() { return tokenType; }
+    public void setTokenType(String tokenType) { this.tokenType = requireNonNull(tokenType); }
 
     public boolean isExpired() { return expired; }
     public void setExpired(boolean expired) { this.expired = expired; }

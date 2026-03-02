@@ -1,14 +1,14 @@
-DROP DATABASE IF EXISTS `daaexample`;
-CREATE DATABASE `daaexample`;
+DROP DATABASE IF EXISTS `eatsily`;
+CREATE DATABASE `eatsily`;
 
-CREATE TABLE `daaexample`.`people` (
+CREATE TABLE `eatsily`.`people` (
 	`id_person` BIGINT NOT NULL AUTO_INCREMENT,
 	`name` varchar(50) NOT NULL,
 	`surname` varchar(100) NOT NULL,
 	PRIMARY KEY (`id_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `daaexample`.`users` (
+CREATE TABLE `eatsily`.`users` (
 	`id_user` BIGINT NOT NULL AUTO_INCREMENT,
 	`username` VARCHAR(50) UNIQUE NOT NULL, 
 	`password_hash`VARCHAR(255) NOT NULL,
@@ -26,15 +26,28 @@ CREATE TABLE `daaexample`.`users` (
 	INDEX `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `daaexample`.`pets` (
-	`pet_id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(50) NOT NULL,
-	`specie` enum('DOG','CAT','BIRD','RABBIT','OTHER') NOT NULL,
-	`breed` varchar(50),
-	`owner_id` int,
-	PRIMARY KEY (`pet_id`),
-	FOREIGN KEY (`owner_id`) REFERENCES `people`(`id_person`) ON DELETE CASCADE
+CREATE TABLE `eatsily`.`tokens` (
+	`id_token` BIGINT NOT NULL AUTO_INCREMENT,
+	`token` VARCHAR(255) NOT NULL,
+	`token_type` VARCHAR(20) NOT NULL,
+	`expired` BOOLEAN NOT NULL DEFAULT FALSE,
+	`revoked` BOOLEAN NOT NULL DEFAULT FALSE,
+	`user_id` BIGINT NOT NULL,
+	PRIMARY KEY (`id_token`),
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id_user`) ON DELETE CASCADE,
+	INDEX `idx_token` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE USER IF NOT EXISTS 'daa'@'localhost' IDENTIFIED WITH mysql_native_password BY 'daa';
-GRANT ALL ON `daaexample`.* TO 'daa'@'localhost';
+CREATE TABLE `eatsily`.`recipes` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`name`varchar(100) NOT NULL,
+	`description` text,
+	`preparation_time` int NOT NULL,
+	`cooking_time` int,
+	`servings` int NOT NULL,
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE USER IF NOT EXISTS 'eatsily_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'eatsily_password';
+GRANT ALL ON `eatsily`.* TO 'eatsily_user'@'localhost';

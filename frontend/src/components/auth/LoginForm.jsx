@@ -27,7 +27,7 @@ export default function LoginForm() {
         // Handle successful login
         if (result.success) {
             // Redirect to dashboard
-            navigate(ROUTES.DASHBOARD);
+            navigate(ROUTES.HOME);
         } 
     };
 
@@ -76,7 +76,7 @@ export default function LoginForm() {
         <div className="d-flex justify-content-start mt-2 mb-4 w-auto">
             <button 
                 type="submit" 
-                className="aa-bg-secondary fw-bold rounded-2 border-light py-2 w-100"
+                className="aa-bg-secondary fw-bold rounded-2 border-light is-hoverable py-2 w-100"
             >
                 {t('login.loginPage.main.form.buttons.login')}
             </button>

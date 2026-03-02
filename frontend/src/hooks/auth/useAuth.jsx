@@ -125,6 +125,8 @@ export default function useAuth() {
         try {
             const result = await authService.logout();
 
+            console.log('Logout Hook:', result);
+
             if (result.success) {
                 clearAuthStates();
                 return { success: true };
@@ -134,7 +136,7 @@ export default function useAuth() {
             }
 
         } catch (err) {
-            console.error('Logout error:', err);
+            console.error('Logout error Hook:', err);
             // Clear authentication states anyway
             clearAuthStates();
             return { success: true };

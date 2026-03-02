@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/DAAExample': {
+      '/Eatsily': {
         target: 'http://localhost:9080',
         changeOrigin: true,
         secure: false,

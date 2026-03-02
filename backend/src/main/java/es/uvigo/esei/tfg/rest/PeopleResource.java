@@ -111,7 +111,7 @@ public class PeopleResource {
 	) {
 		try {
 			
-			final Person newPerson = this.dao.create(name, surname);
+			final Person newPerson = this.dao.create(new Person(name, surname));
 			
 			return Response.ok(newPerson).build();
 		} catch (IllegalArgumentException iae) {

@@ -19,11 +19,18 @@ public class TokenDAO extends DAO {
 	
     public Token create(Token token) 
     throws DAOException {
-        if (token == null) {
-            throw new IllegalArgumentException("token can't be null");
-        }
+        return create(token, null);
+    }
 
-        try (final Connection conn = this.getConnection()) {
+    public Token create(Token token, Connection externalConnection) 
+    throws DAOException {
+        ensureTokenDataIntegrity(token);
+
+        boolean isExternalConnection = isExternalConnection(externalConnection);
+        Connection conn = null;
+
+        try {
+            conn = this.getConnection(externalConnection);
 
             final String query = "INSERT INTO tokens" +
                 " (token, token_type, user_id) " +
@@ -31,7 +38,7 @@ public class TokenDAO extends DAO {
 
             try (final PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, token.getToken());
-                statement.setString(2, token.getToken_type());
+                statement.setString(2, token.getTokenType());
                 statement.setLong(3, token.getIdUser());
 
                 if (statement.executeUpdate() == 1) {
@@ -52,38 +59,9 @@ public class TokenDAO extends DAO {
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "Error inserting token", e);
             throw new DAOException("Error inserting token: " + e.getMessage());
-        }
-    }
-
-    public Token create(Connection conn, Token token) 
-    throws SQLException, DAOException {
-        if (token == null) {
-            throw new IllegalArgumentException("token can't be null");
-        }
-
-        final String query = "INSERT INTO tokens" +
-            " (token, token_type, user_id) " +
-            " VALUES (?, ?, ?)";
-
-        try (final PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, token.getToken());
-            statement.setString(2, token.getToken_type());
-            statement.setLong(3, token.getIdUser());
-
-            if (statement.executeUpdate() == 1) {
-                try (final ResultSet resultKeys = statement.getGeneratedKeys()) {
-                    if (resultKeys.next()) {
-                        token.setId(resultKeys.getInt(1));
-                        return token;
-                    } else {
-                        LOG.log(Level.SEVERE, "Error retrieving inserted id");
-                        throw new DAOException("Error retrieving inserted id");
-                    }
-                }
-            } else {
-                LOG.log(Level.SEVERE, "Error inserting value");
-                throw new DAOException("Error inserting value");
-            }
+            
+        } finally {
+            closeConnection(conn, isExternalConnection);
         }
     }
 
@@ -92,7 +70,7 @@ public class TokenDAO extends DAO {
 
     public Token get(long id)
     throws DAOException, IllegalArgumentException {
-        try (final Connection conn = this.getConnection()) {
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "SELECT * FROM tokens WHERE id_token = ?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -114,7 +92,11 @@ public class TokenDAO extends DAO {
 
     public Token getByToken(String token)
     throws DAOException, IllegalArgumentException {
-        try (final Connection conn = this.getConnection()) {
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalArgumentException("Token can't be null or empty");
+        }
+        
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "SELECT * FROM tokens WHERE id_token = ?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -148,25 +130,44 @@ public class TokenDAO extends DAO {
 
 	//============ OTHER METHODS  ============
 
-    public void revokeAllUserTokens(User user) {
-        try (final Connection conn = this.getConnection()) {
+    public void revokeAllUserTokens(long userId) 
+    throws DAOException {
+        revokeAllUserTokens(userId, null);
+    }
+
+    public void revokeAllUserTokens(long userId, Connection externalConnection) 
+    throws DAOException {
+
+        boolean isExternalConnection = isExternalConnection(externalConnection);
+        Connection conn = null;
+
+        try {
+            conn = this.getConnection(externalConnection);
+
             final String query = "UPDATE tokens SET revoked = true WHERE user_id = ? AND revoked = false";
                 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
-                statement.setLong(1, user.getId());
+                statement.setLong(1, userId);
                 statement.executeUpdate();
             }             
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "Error revoking user tokens", e);
-        }
-    }
+            throw new DAOException("Error revoking user tokens: " + e.getMessage(), e);
 
-    public Connection getConnection() throws SQLException {
-        return super.getConnection();
+        } finally {
+            closeConnection(conn, isExternalConnection);
+        }
     }
 
 	//============   AUXILIARY   ============
 
+    /**
+     * Converts the current row of the provided {@link ResultSet} into a {@link Token} entity.
+     * 
+     * @param result the {@link ResultSet} positioned at the row to convert.
+     * @return a {@link Token} entity with the data from the current row of the provided {@link ResultSet}.
+     * @throws SQLException if an error happens while accessing the data from the provided {@link ResultSet}.
+     */
     private Token rowToEntity(ResultSet result) throws SQLException {
         return new Token(
             result.getInt("id"),
@@ -177,5 +178,30 @@ public class TokenDAO extends DAO {
             result.getLong("id_user")
         );
     }
+
+    /**
+     * Ensures that the provided token has all the necessary data to be persisted in the database.
+     * 
+     * @param token the token to check.
+     * @throws IllegalArgumentException if the token is {@code null} or any of its required fields is {@code null} or empty.
+     */
+    private void ensureTokenDataIntegrity(Token token) throws IllegalArgumentException {
+        if (token == null) {
+            throw new IllegalArgumentException("token can't be null");
+        }
+
+        if (token.getToken() == null || token.getToken().trim().isEmpty()) {
+            throw new IllegalArgumentException("token can't be null or empty");
+        }
+
+        if (token.getTokenType() == null || token.getTokenType().trim().isEmpty()) {
+            throw new IllegalArgumentException("tokenType can't be null or empty");
+        }
+
+        if (token.getIdUser() <= 0) {
+            throw new IllegalArgumentException("idUser must be a positive number");
+        }                
+    }
+
 
 }

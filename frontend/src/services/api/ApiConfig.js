@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-const BACKEND_URL = 'DAAExample/rest';
+const BACKEND_URL = 'Eatsily/rest';
 
 $.ajaxSetup({
     contentType: 'application/json',
