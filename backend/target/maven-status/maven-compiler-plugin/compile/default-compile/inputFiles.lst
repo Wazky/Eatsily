@@ -1,6 +1,5 @@
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\DAO.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\PeopleDAO.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\PetDAO.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\RecipeDAO.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\TokenDAO.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dao\UsersDAO.java
@@ -12,9 +11,7 @@ C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\e
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\dto\UserResponse.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\EatsilyRestApplication.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Person.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Pet.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Recipe.java
-C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Species.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\Token.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\entities\User.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\exceptions\AccountBlockedException.java
@@ -29,4 +26,6 @@ C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\e
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\security\JwtAuthenticationFilter.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\security\Secured.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\services\AuthService.java
+C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\services\TokenManagmentService.java
+C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\services\UserPersonService.java
 C:\Users\USUARIO\Desktop\Programing\TFG\EATSILY\backend\src\main\java\es\uvigo\esei\tfg\util\JwtUtil.java

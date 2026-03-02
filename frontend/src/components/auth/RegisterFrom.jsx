@@ -51,7 +51,7 @@ export default function RegisterForm() {
         if (result.success) {
             // Redirect to login page after successful registration
             console.log('Registration successful, redirecting to login page...');
-            navigate(ROUTES.DASHBOARD);
+            navigate(ROUTES.HOME);
         
         // Handle registration failure
         } else {
@@ -160,7 +160,7 @@ export default function RegisterForm() {
         <div className="d-flex justify-content-start my-4 w-auto me-3">
             <button 
                 type="submit" 
-                className="aa-bg-secondary fw-bold rounded-2 border-light py-2 w-100"
+                className="aa-bg-secondary fw-bold rounded-2 border-light is-hoverable py-2 w-100"
                 disabled={isSubmitting || loading}
             >
                 {( isSubmitting || loading ) ?

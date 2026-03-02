@@ -84,7 +84,6 @@ class AuthService {
      */
     async logout() {
         try {
-
             const accessToken = this.getAccessToken();
 
             // If no access token is found, clear local auth data
@@ -92,7 +91,6 @@ class AuthService {
                 console.warn('No access token found, cannot perform logout API call');
 
                 this.clearAuthData();
-
                 return {
                     success: true,
                     message: 'Logged out locally, but no API call was made due to missing access token'
@@ -105,52 +103,27 @@ class AuthService {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
-                }
+                },
+                dataType: 'text'  
             })
 
-            // Clear local authentication data after successful logout
             this.clearAuthData();
-
             return {
                 success: true,
-                message: response.message || 'Logged out successfully'
+                message: 'Logged out successfully'
             }
 
         } catch (error) {
-            console.error('Logout error:', error);
+            console.error('Logout error Service:', error);
 
             // Clear local authentication data even if API call fails
             this.clearAuthData();
-
             return {
                 success: false,
                 error: error.responseJSON || { message: 'Logout failed' }
             }
         }
     }
-
-    async ping() {
-        try {
-            const response = await $.ajax({
-                url: url('/auth/securedPing'),
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${this.getAccessToken()}`
-                }
-            });
-
-            return {
-                success: true,
-                data: response
-            }
-        } catch (error) {
-            return {
-                success: false,
-                error: error.responseJSON || { message: 'Ping failed' }
-            }
-        }
-    }
-
 
     /**
      * Save authentication data (tokens and user info) to localStorage 

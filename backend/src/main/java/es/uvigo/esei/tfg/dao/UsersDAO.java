@@ -24,20 +24,21 @@ public class UsersDAO extends DAO {
 	
 	//============     CREATE     ============
 	
-	/**
-	 * Creates a new user in the system.
-	 * 
-	 * @param user the user to be created.
-	 * @return the created user with the assigned identifier.
-	 * @throws DAOException if an error happens while creating the user.
-	 */
-	public User create (User user) 
-	throws DAOException {
-		if (user == null) {
-			throw new IllegalArgumentException("User can't be null");
-		}
 
-		try (final Connection conn = this.getConnection()) {
+	public User create(User user)
+	throws DAOException {
+		return create(user, null);
+	}
+
+	public User create (User user, Connection externalConnection) 
+	throws DAOException {
+		ensureUserDataIntegrity(user);
+
+		boolean isExternalConnection = isExternalConnection(externalConnection);
+		Connection conn = null;
+
+		try {
+			conn = this.getConnection(externalConnection);
 
 			final String query = "INSERT INTO users" + 
 				" (username, password_hash, email, role, person_id)" +
@@ -47,14 +48,7 @@ public class UsersDAO extends DAO {
 				statement.setString(1,  user.getUsername());
 				statement.setString(2,  user.getPasswordHash());
 				statement.setString(3,  user.getEmail());
-				
-				// If the role is not provided, set it to "USER" by default
-				if (user.getRole() != null) {
-					statement.setString(4, user.getRole());
-				} else {
-					statement.setString(4, "USER");
-				}
-
+				statement.setString(4,  (user.getRole() != null) ? user.getRole() : "USER");
 				statement.setObject(5, user.getPerson().getId());
 				
 				if (statement.executeUpdate() == 1) {
@@ -77,59 +71,14 @@ public class UsersDAO extends DAO {
 					LOG.log(Level.SEVERE, "Error inserting value");
 					throw new SQLException("Error inserting value");
 				}
-
 			}
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Error creating a user", e);
 			throw new DAOException(e);
+
+		} finally {
+			closeConnection(conn, isExternalConnection);
 		}
-	}
-
-	public User create (Connection conn, User user) 
-	throws SQLException, IllegalArgumentException {
-		if (user == null) {
-			throw new IllegalArgumentException("User can't be null");
-		}
-
-		final String query = "INSERT INTO users" +
-			" (username, password_hash, email, role, person_id)" +
-			" VALUES (?, ?, ?, ?, ?)";
-		
-		try (final PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-			statement.setString(1,  user.getUsername());
-			statement.setString(2,  user.getPasswordHash());
-			statement.setString(3,  user.getEmail());
-			
-			// If the role is not provided, set it to "USER" by default
-			if (user.getRole() != null) {
-				statement.setString(4, user.getRole());
-			} else {
-				statement.setString(4, "USER");
-			}
-
-			statement.setObject(5, user.getPerson().getId());
-			
-			if (statement.executeUpdate() == 1) {
-				try (final ResultSet resultKeys = statement.getGeneratedKeys()) {
-					if (resultKeys.next()) {							
-						return new User(
-							resultKeys.getLong(1),
-							user.getUsername(),
-							user.getPasswordHash(),
-							user.getEmail(),
-							(user.getRole() != null) ? user.getRole() : "USER",
-							user.getPerson()
-						);
-					} else {
-						LOG.log(Level.SEVERE, "Error retrieving inserted id");
-						throw new SQLException("Error retrieving inserted id");
-					}
-				}
-			} else {
-				LOG.log(Level.SEVERE, "Error inserting value");
-				throw new SQLException("Error inserting value");
-			}
-		}				
 	}
 
 	//============     READ     ============
@@ -144,7 +93,7 @@ public class UsersDAO extends DAO {
 	 */
 	public User get(long id) 
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "SELECT * FROM users WHERE id_user=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -174,7 +123,7 @@ public class UsersDAO extends DAO {
 	 */
 	public User getByUsername(String username) 
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "SELECT * FROM users WHERE username=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -200,8 +149,10 @@ public class UsersDAO extends DAO {
 
 	// Handle before calling it having all user fields with previous or new values
 	public void update (User user) 
-	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+	throws DAOException, IllegalArgumentException {		
+		ensureUserDataIntegrity(user);
+
+		try (final Connection conn = this.getConnection(null)) {
 
 			final String query = "UPDATE users SET" +
 				" username=?, password_hash=?, email=?, role=?, active=?, blocked=?," +
@@ -242,7 +193,7 @@ public class UsersDAO extends DAO {
 	 */
 	public void updateLastLogin(long userId)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 
 			final String query = "UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id_user = ?";
 
@@ -266,7 +217,7 @@ public class UsersDAO extends DAO {
 
 	public void delete(long id)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "DELETE FROM users WHERE id_user=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -284,7 +235,7 @@ public class UsersDAO extends DAO {
 	
 	public void deleteByUsername(String username)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "DELETE FROM users WHERE username=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -315,7 +266,7 @@ public class UsersDAO extends DAO {
 	 */
 	public void recordFailedLoginAttempt(long userId)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 
 			final String query = "UPDATE users SET failed_login_attempts = failed_login_attempts + 1 WHERE id_user = ?";
 
@@ -345,7 +296,7 @@ public class UsersDAO extends DAO {
 	 */
 	public void resetFailedLoginAttempts(long userId)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 
 			final String query = "UPDATE users SET failed_login_attempts = 0 WHERE id_user = ?";
 
@@ -375,7 +326,7 @@ public class UsersDAO extends DAO {
 	 */
 	public void lockUserAccount(long userId)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 
 			final String query = "UPDATE users SET blocked = true WHERE id_user = ?";
 
@@ -406,7 +357,7 @@ public class UsersDAO extends DAO {
 	 */
 	public void unlockUserAccount(long userId)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 
 			final String query = "UPDATE users SET blocked = false, failed_login_attempts = 0 WHERE id_user = ?";
 
@@ -434,7 +385,7 @@ public class UsersDAO extends DAO {
 	 */
 	public boolean existsByUsername(String username) 
 	throws DAOException {
-		try (Connection conn = this.getConnection()) {
+		try (Connection conn = this.getConnection(null)) {
 
 			final String query = "SELECT 1 FROM users WHERE username = ?";
 
@@ -460,7 +411,7 @@ public class UsersDAO extends DAO {
 	 */
 	public boolean existsByEmail(String email)
 	throws DAOException {
-		try (Connection conn = this.getConnection()) {
+		try (Connection conn = this.getConnection(null)) {
 
 			final String query = "SELECT 1 FROM users WHERE email = ?";
 
@@ -481,12 +432,8 @@ public class UsersDAO extends DAO {
 	/**
 	 * Converts a ResultSet row into a User entity.
 	 * The ResultSet must contain at least the following columns:
-	 * - id_user
-	 * - username
-	 * - password_hash	
-	 * - email
-	 * - role
-	 * - person_id
+	 * id_user, username, password_hash, email, role and person_id.
+	 * 
 	 * @param result the ResultSet positioned at the row to be converted.
 	 * @return the corresponding User entity.
 	 * @throws SQLException if an error happens while accessing the ResultSet.
@@ -557,4 +504,36 @@ public class UsersDAO extends DAO {
 
 		return person;
 	}
+
+	/**
+	 * Ensures that the provided User entity has all the necessary data to be persisted in the system.
+	 * This method checks that the user is not null neither all his required fields 
+	 * (username, password hash, email and person) are null or blank.
+	 * 
+	 * @param user the User entity to be checked.
+	 * @throws IllegalArgumentException if the user is null or if any of the required fields is null or blank.
+	 */
+	private void ensureUserDataIntegrity(User user)
+	throws IllegalArgumentException {
+		if (user == null) {
+			throw new IllegalArgumentException("User can't be null");
+		}
+
+		if (user.getUsername() == null || user.getUsername().isBlank()) {
+			throw new IllegalArgumentException("Username can't be null or blank");
+		}
+
+		if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()) {
+			throw new IllegalArgumentException("Password hash can't be null or blank");
+		}
+
+		if (user.getEmail() == null || user.getEmail().isBlank()) {
+			throw new IllegalArgumentException("Email can't be null or blank");
+		}
+
+		if (user.getPerson() == null || user.getPerson().getId() <= 0) {
+			throw new IllegalArgumentException("Person can't be null and must have a valid id");
+		}
+	}
+
 }

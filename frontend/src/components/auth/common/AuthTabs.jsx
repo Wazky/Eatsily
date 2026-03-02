@@ -7,11 +7,11 @@ export default function AuthTabs({ activeTab = "login" }) {
     const { t } = useTranslation("auth");
 
     let baseLinkClass = " text-center text-decoration-none fw-bold py-2 rounded-top-3 ";
-    let activeLinkClass = "col-md-8 aa-bg-primary ";
-    let inactiveLinkClass = "col-md-4 bg-text-400 aa-txt-background is-hoverable";
+    let activeLinkClass = "col-8 aa-bg-primary ";
+    let inactiveLinkClass = "col-4 bg-text-400 aa-txt-background is-hoverable";
 
     return (
-    <nav className="w-75 nav justify-content-between rounded-top-3 mt-3">
+    <nav className="w-75 nav justify-content-between rounded-top-3 mt-2">
         
         {/* Register Tab */}
         <Link 

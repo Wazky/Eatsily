@@ -24,6 +24,11 @@ public class PeopleDAO extends DAO {
 	
 	//============     CREATE     ============
 
+	public Person create(Person person)
+	throws DAOException, IllegalArgumentException {
+		return create(person, null);
+	}
+
 	/**
 	 * Persists a new person in the system. An identifier will be assigned
 	 * automatically to the new person.
@@ -34,23 +39,31 @@ public class PeopleDAO extends DAO {
 	 * @throws DAOException if an error happens while persisting the new person.
 	 * @throws IllegalArgumentException if the name or surname are {@code null}.
 	 */
-	public Person create(String name, String surname)
+	public Person create(Person person, Connection externalConnection)
 	throws DAOException, IllegalArgumentException {
-		if (name == null || surname == null) {
-			throw new IllegalArgumentException("name and surname can't be null");
-		}
+
+		ensurePersonDataIntegrity(person);
 		
-		try (Connection conn = this.getConnection()) {
+		boolean isExternalConnection = isExternalConnection(externalConnection);
+		Connection conn = null;
+
+		try {
+			conn = this.getConnection(externalConnection);
+
 			final String query = "INSERT INTO people VALUES(null, ?, ?)";
 			
 			try (PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-				statement.setString(1, name);
-				statement.setString(2, surname);
+				statement.setString(1, person.getName());
+				statement.setString(2, person.getSurname());
 				
 				if (statement.executeUpdate() == 1) {
 					try (ResultSet resultKeys = statement.getGeneratedKeys()) {
 						if (resultKeys.next()) {
-							return new Person(resultKeys.getInt(1), name, surname);
+							return new Person(
+								resultKeys.getInt(1), 
+								person.getName(), 
+								person.getSurname()
+							);							
 						} else {
 							LOG.log(Level.SEVERE, "Error retrieving inserted id");
 							throw new SQLException("Error retrieving inserted id");
@@ -64,34 +77,9 @@ public class PeopleDAO extends DAO {
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Error adding a person", e);
 			throw new DAOException(e);
-		}
-	}
-
-	public Person create(Connection conn, String name, String surname) 
-	throws SQLException, IllegalArgumentException {
-		if (name == null || surname == null) {
-			throw new IllegalArgumentException("name and surname can't be null");
-		}
-
-		final String query = "INSERT INTO people VALUES(null, ?, ?)";
-
-		try (PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-			statement.setString(1, name);
-			statement.setString(2, surname);
-			
-			if (statement.executeUpdate() == 1) {
-				try (ResultSet resultKeys = statement.getGeneratedKeys()) {
-					if (resultKeys.next()) {
-						return new Person(resultKeys.getInt(1), name, surname);
-					} else {
-						LOG.log(Level.SEVERE, "Error retrieving inserted id");
-						throw new SQLException("Error retrieving inserted id");
-					}
-				}
-			} else {
-				LOG.log(Level.SEVERE, "Error inserting value");
-				throw new SQLException("Error inserting value");
-			}
+		
+		} finally {
+			closeConnection(conn, isExternalConnection);
 		}
 	}
 
@@ -108,7 +96,7 @@ public class PeopleDAO extends DAO {
 	 */
 	public Person get(long id)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "SELECT * FROM people WHERE id_person=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -135,7 +123,7 @@ public class PeopleDAO extends DAO {
 	 * @throws DAOException if an error happens while retrieving the people.
 	 */
 	public List<Person> list() throws DAOException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "SELECT * FROM people";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -170,11 +158,9 @@ public class PeopleDAO extends DAO {
 	 */
 	public void update(Person person)
 	throws DAOException, IllegalArgumentException {
-		if (person == null) {
-			throw new IllegalArgumentException("person can't be null");
-		}
+		ensurePersonDataIntegrity(person);
 		
-		try (Connection conn = this.getConnection()) {
+		try (Connection conn = this.getConnection(null)) {
 			final String query = "UPDATE people SET name=?, surname=? WHERE id_person=?";
 			
 			try (PreparedStatement statement = conn.prepareStatement(query)) {
@@ -206,7 +192,7 @@ public class PeopleDAO extends DAO {
 	 */
 	public void delete(long id)
 	throws DAOException, IllegalArgumentException {
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "DELETE FROM people WHERE id_person=?";
 			
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -229,18 +215,8 @@ public class PeopleDAO extends DAO {
 	
 	//============   AUXILIARY   ============
 
-	/**
-	 * Obtain a connection from the connection pool.
-	 * @return an open connection to the database.
-	 * @throws SQLException if an error happens while establishing the connection with the database.
-	 */
-	public Connection getConnection() throws SQLException {
-		return super.getConnection();
-	}
-
-
 	public boolean exists(long id) throws DAOException{
-		try (final Connection conn = this.getConnection()) {
+		try (final Connection conn = this.getConnection(null)) {
 			final String query = "SELECT 1 FROM people WHERE id_person=?";
 
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -263,4 +239,23 @@ public class PeopleDAO extends DAO {
 			row.getString("surname")
 		);
 	}
+
+	/**
+	 * Ensures that the provided Person entity has all the required data to be persisted in the system. 
+	 * This method checks that the person is not {@code null} 
+	 * neither his fields {@code name} and {@code surname} are {@code null}. 
+	 * 
+	 * @param person the person to check.
+	 * @throws IllegalArgumentException if the person is {@code null} or any of the required fields are {@code null}.
+	 */
+	private void ensurePersonDataIntegrity(Person person) throws IllegalArgumentException {
+		if (person == null) {
+			throw new IllegalArgumentException("person can't be null");
+		}
+		
+		if (person.getName() == null || person.getSurname() == null) {
+			throw new IllegalArgumentException("name and surname can't be null");
+		}
+	}
+
 }

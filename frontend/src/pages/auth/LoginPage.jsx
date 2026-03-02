@@ -16,31 +16,33 @@ export default function LoginPage() {
 
     return (
     <AuthLayout authType="login">
-        
+
         {/* Side Image */}
         <AuthSideImg 
             imgSrc={loginImg}
             altText={t('loginPage.main.sideImageAlt')}
         />
 
+
+    
         {/* Content Container */}
         <AuthContentContainer>
 
-            <div className="me-5">
-                {/* Login Header */}
-                <LoginHeader />
-            </div>
+                <div className="me-5">
+                    {/* Login Header */}
+                    <LoginHeader />
+                </div>
 
-            {/* Login Form */}
-            <LoginForm />
-
-            <div className="me-5">
-                {/* Footer with link to Register */}
-                <AuthFooter authType="login" />
-            </div>
+                {/* Login Form */}
+                <LoginForm />
+                
+                <div className="me-5">
+                    {/* Footer with link to Register */}
+                    <AuthFooter authType="login" />
+                </div>
 
         </AuthContentContainer>
-        
+
     </AuthLayout>
     );
 }

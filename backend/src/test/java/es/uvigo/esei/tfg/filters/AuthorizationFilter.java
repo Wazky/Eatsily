@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
-import es.uvigo.esei.tfg.dao.DAOException;
+import es.uvigo.esei.tfg.exceptions.DAOException;
 import es.uvigo.esei.tfg.dao.UsersDAO;
 import es.uvigo.esei.tfg.entities.User;
 

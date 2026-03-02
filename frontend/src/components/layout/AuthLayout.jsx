@@ -3,7 +3,7 @@ import AuthTabs from "../auth/common/AuthTabs";
 export default function AuthLayout({ authType, children }) {
 
     return (
-        <div className="container-fluid d-flex flex-column align-items-center justify-content-center m-2">
+        <div className=" d-flex flex-column align-items-center justify-content-center mb-2">
         
             {/* Selection Tabs (Login/Register) */}
             <AuthTabs activeTab={authType} />

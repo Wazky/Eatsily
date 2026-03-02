@@ -25,7 +25,7 @@ export default function AuthFooter({ authType }) {
             {content[authType].message}
             <Link 
                 to={content[authType].linkTo}
-                className="text-decoration-none aa-txt-secondary is-hoverable ms-2"    
+                className="text-decoration-none txt-secondary-important hover-bright-text ms-2"    
             >
                 {content[authType].linkText}
             </Link>

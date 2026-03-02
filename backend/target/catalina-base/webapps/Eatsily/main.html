@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DAA Example</title>
+	<!--	<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+</head>
+<body>
+	<header>
+		<div class="navbar navbar-dark bg-dark box-shadow">
+			<div class="container d-flex justify-content-between">
+				<a href="#" class="navbar-brand d-flex align-items-center">
+					<strong>DAA	Example</strong>
+				</a>
+				<button id="toggle-view-btn"  class="btn btn-dark">Ver Mascotas</button>
+				<button id="logout" class="btn btn-dark">Cerrar sesión</button>
+			</div>
+		</div>
+	</header>
+
+	<div class="container">
+		<div id="main-container"></div>
+	</div>
+	
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+	
+	<script type="text/javascript" src="js/dao/people.js"></script>
+	<script type="text/javascript" src="js/view/people.js"></script>
+	<script type="text/javascript" src="js/dao/pet.js"></script>
+	<script type="text/javascript" src="js/view/pet.js"></script>
+	<script type="text/javascript" src="js/view/ownerPets.js"></script>
+	<script type="text/javascript" src="js/login.js"></script>
+	<script type="text/javascript" src="js/controller/viewController.js"></script>
+	<script type="text/javascript">
+	$(document).ready(
+		function() {
+		    $('#logout').click(function(event) {
+				event.preventDefault();
+				doLogout();
+		    });
+
+			var viewController = new ViewController('main-container', 'toggle-view-btn');
+			viewController.init();
+
+			$('#toggle-view-btn').click(function(event) {
+				event.preventDefault();
+				viewController.toggleView();
+			});
+		});
+    </script>
+</body>
+</html>
+

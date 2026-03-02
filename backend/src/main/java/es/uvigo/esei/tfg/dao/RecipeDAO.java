@@ -11,13 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import es.uvigo.esei.tfg.entities.Recipe;
+import es.uvigo.esei.tfg.exceptions.DAOException;
 
 public class RecipeDAO extends DAO {
     private final static Logger LOG = Logger.getLogger(RecipeDAO.class.getName());
 
     public Recipe get(int id)
     throws DAOException, IllegalArgumentException {
-        try (final Connection conn = this.getConnection()) {
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "SELECT * FROM recipes WHERE id=?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -38,7 +39,7 @@ public class RecipeDAO extends DAO {
     }
 
     public List<Recipe> list() throws DAOException {
-        try (final Connection conn = this.getConnection()) {
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "SELECT * FROM recipes";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -47,17 +48,18 @@ public class RecipeDAO extends DAO {
                     while (result.next()) {
                         recipes.add(rowToEntity(result));
                     }
+                    
+                    return recipes;
                 }
             }
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "Error getting recipes", e);
             throw new DAOException(e);
         }
-        return recipes;
     }
 
     public Recipe add(String name, String description, int preparationTime, int cookingTime, int servings) throws DAOException {
-        try (final Connection conn = this.getConnection()) {
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "INSERT INTO recipes (name, description, preparation_time, cooking_time, servings) VALUES (?, ?, ?, ?, ?)";
 
             try (final PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -88,7 +90,7 @@ public class RecipeDAO extends DAO {
 
     public void update(Recipe recipe)
     throws DAOException, IllegalArgumentException {
-        try (final Connection conn = this.getConnection()) {
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "UPDATE recipes SET name=?, description=?, preparation_time=?, cooking_time=?, servings=? WHERE id=?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
@@ -112,7 +114,7 @@ public class RecipeDAO extends DAO {
 
     public void delete(int id)
     throws DAOException, IllegalArgumentException {
-        try (final Connection conn = this.getConnection()) {
+        try (final Connection conn = this.getConnection(null)) {
             final String query = "DELETE FROM recipes WHERE id=?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {

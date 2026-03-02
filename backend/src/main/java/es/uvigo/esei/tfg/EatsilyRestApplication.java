@@ -13,7 +13,6 @@ import javax.ws.rs.core.Application;
 import es.uvigo.esei.tfg.rest.AuthResource;
 import es.uvigo.esei.tfg.rest.PeopleResource;
 import es.uvigo.esei.tfg.rest.UsersResource;
-import es.uvigo.esei.tfg.rest.PetResource;
 import es.uvigo.esei.tfg.rest.RecipeResource;
 import es.uvigo.esei.tfg.security.JwtAuthenticationFilter;
 
@@ -31,11 +30,9 @@ public class EatsilyRestApplication extends Application {
 		return Stream.of(
 			PeopleResource.class,
 			UsersResource.class,
-			PetResource.class,
-			RecipeResource.class,
 			AuthResource.class,
-			JwtAuthenticationFilter.class
-
+			JwtAuthenticationFilter.class,
+			RecipeResource.class
 		).collect(toSet());
 	}
 	

@@ -47,16 +47,6 @@ public class AuthResource {
         this.authService = new AuthService();
     }
 
-    @GET
-    @Secured
-    @Path("/securedPing")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response securedPing() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "¡Autenticación correcta!");
-        return Response.ok(response).build();
-    }
-
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)

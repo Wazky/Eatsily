@@ -15,7 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import es.uvigo.esei.tfg.dao.DAOException;
+import es.uvigo.esei.tfg.exceptions.DAOException;
 import es.uvigo.esei.tfg.dao.RecipeDAO;
 import es.uvigo.esei.tfg.entities.Recipe;
 
@@ -97,9 +97,10 @@ public class RecipeResource {
         @FormParam("servings") int servings
     ) {
         try {
-            final Recipe recipe = this.dao.update(id, name, description, preparationTime, cookingTime, servings);
-            return Response.ok(recipe).build();
-
+            final Recipe updatedRecipe = new Recipe(id, name, description, preparationTime, cookingTime, servings);
+            this.dao.update(updatedRecipe);
+                        
+            return Response.ok(updatedRecipe).build();
         } catch (DAOException e) {
             LOG.log(Level.SEVERE, "Error updating a recipe", e);
             return Response.serverError().entity(e.getMessage()).build();

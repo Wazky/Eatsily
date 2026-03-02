@@ -13,6 +13,8 @@ export const ROUTES = {
 // -PROTECTED ROUTES
     
     // Dashboard route 
-    DASHBOARD: "/",
+    HOME: "/",
+    PROFILE: "/profile",        
+
 
 }
