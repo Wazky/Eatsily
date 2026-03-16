@@ -1,9 +1,9 @@
-package es.uvigo.esei.tfg.services;
+package es.uvigo.esei.tfg.services.user;
 
-import es.uvigo.esei.tfg.dao.TokenDAO;
+import es.uvigo.esei.tfg.dao.user.TokenDAO;
 import es.uvigo.esei.tfg.dto.TokenResponse;
-import es.uvigo.esei.tfg.entities.Token;
-import es.uvigo.esei.tfg.entities.User;
+import es.uvigo.esei.tfg.entities.user.Token;
+import es.uvigo.esei.tfg.entities.user.User;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 import es.uvigo.esei.tfg.util.JwtUtil;
 
@@ -37,6 +37,7 @@ public class TokenManagmentService {
     public TokenResponse generateNewTokens(User user) 
     throws DAOException {
         TokenResponse tokenResponse = generateTokenResponse(user.getUsername());
+        LOG.info("Generated new tokens: access " + tokenResponse.getAccessToken() + ", refresh " + tokenResponse.getRefreshToken());
         saveUserToken(user.getId(), tokenResponse.getRefreshToken(), null);
         return tokenResponse;
     }
@@ -150,7 +151,8 @@ public class TokenManagmentService {
         tokenDAO.revokeAllUserTokens(userId);
     }
 
-    public Token getByToken(String token) throws DAOException {
+    public Token getByToken(String token) 
+    throws IllegalArgumentException, DAOException {
         Token storedToken = tokenDAO.getByToken(token);
 
         if (storedToken == null || storedToken.isRevoked()) {

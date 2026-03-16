@@ -1,4 +1,4 @@
-package es.uvigo.esei.tfg.dao;
+package es.uvigo.esei.tfg.dao.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +10,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import es.uvigo.esei.tfg.entities.Person;
-import es.uvigo.esei.tfg.entities.User;
+import es.uvigo.esei.tfg.dao.DAO;
+import es.uvigo.esei.tfg.entities.user.Person;
+import es.uvigo.esei.tfg.entities.user.User;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 
 /**
@@ -25,11 +26,31 @@ public class UsersDAO extends DAO {
 	//============     CREATE     ============
 	
 
+	/**
+	 * Persists a new user in the system. An identifier will be assigned
+	 * automatically to the new user.
+	 * 
+	 * @param user the User entity containing the information of the new user to be persisted. 
+	 *             The id field will be ignored, as it will be generated automatically.
+	 * @return a {@link User} entity representing the persisted user, including the generated identifier.
+	 * @throws DAOException if an error happens while persisting the new user.
+	 * @throws IllegalArgumentException if any of the required fields of the user is null or invalid.
+	 */
 	public User create(User user)
 	throws DAOException {
 		return create(user, null);
 	}
 
+	/**
+	 * Persists a new user in the system. An identifier will be assigned
+	 * automatically to the new user.
+	 * 
+	 * @param user the User entity containing the information of the new user to be persisted. 
+	 *             The id field will be ignored, as it will be generated automatically.
+	 * @return a {@link User} entity representing the persisted user, including the generated identifier.
+	 * @throws DAOException if an error happens while persisting the new user.
+	 * @throws IllegalArgumentException if any of the required fields of the user is null or invalid.
+	 */
 	public User create (User user, Connection externalConnection) 
 	throws DAOException {
 		ensureUserDataIntegrity(user);
@@ -123,6 +144,10 @@ public class UsersDAO extends DAO {
 	 */
 	public User getByUsername(String username) 
 	throws DAOException, IllegalArgumentException {
+		if (username == null || username.trim().isEmpty()) {
+			throw new IllegalArgumentException("Username cannot be null or blank");
+		}
+
 		try (final Connection conn = this.getConnection(null)) {
 			final String query = "SELECT * FROM users WHERE username=?";
 			
@@ -223,7 +248,7 @@ public class UsersDAO extends DAO {
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
 				statement.setLong(1, id);
 				
-				if (statement.executeUpdate() != 1) {
+				if (statement.executeUpdate() == 0) {
 					throw new IllegalArgumentException("Invalid id");
 				}
 			}
@@ -241,7 +266,7 @@ public class UsersDAO extends DAO {
 			try (final PreparedStatement statement = conn.prepareStatement(query)) {
 				statement.setString(1, username);
 				
-				if (statement.executeUpdate() != 1) {
+				if (statement.executeUpdate() == 0) {
 					throw new IllegalArgumentException("Invalid username");
 				}
 			}
@@ -440,7 +465,7 @@ public class UsersDAO extends DAO {
 	 */
 	private User rowToEntity(ResultSet result) throws SQLException {
 
-		Set<String> columnNames = getColumnNames(result);
+		Set<String> columnNames = this.getColumnNames(result);
 
 		Person person = extractPerson(result, columnNames);
 
@@ -476,17 +501,6 @@ public class UsersDAO extends DAO {
 		return user;
 	}
 
-	private Set<String> getColumnNames(ResultSet result) throws SQLException {
-        ResultSetMetaData metaData = result.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        Set<String> columnNames = new HashSet<>();
-
-        for (int i = 1; i <= columnCount; i++) {
-            columnNames.add(metaData.getColumnLabel(i));
-        }
-
-        return columnNames;
-    }
 
 	private Person extractPerson(ResultSet result, Set<String> columnNames)
 	throws SQLException {
@@ -519,15 +533,15 @@ public class UsersDAO extends DAO {
 			throw new IllegalArgumentException("User can't be null");
 		}
 
-		if (user.getUsername() == null || user.getUsername().isBlank()) {
+		if (user.getUsername() == null || isBlank(user.getUsername())) {
 			throw new IllegalArgumentException("Username can't be null or blank");
 		}
 
-		if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()) {
+		if (user.getPasswordHash() == null || isBlank(user.getPasswordHash())) {
 			throw new IllegalArgumentException("Password hash can't be null or blank");
 		}
 
-		if (user.getEmail() == null || user.getEmail().isBlank()) {
+		if (user.getEmail() == null || isBlank(user.getEmail())) {
 			throw new IllegalArgumentException("Email can't be null or blank");
 		}
 
@@ -535,5 +549,10 @@ public class UsersDAO extends DAO {
 			throw new IllegalArgumentException("Person can't be null and must have a valid id");
 		}
 	}
+
+	private boolean isBlank(String str) {
+    return str == null || str.trim().isEmpty();
+}
+
 
 }

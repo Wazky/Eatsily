@@ -1,11 +1,9 @@
-package es.uvigo.esei.tfg.entities;
+package es.uvigo.esei.tfg.entities.user;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * An entity that represents a person.
- * 
- * @author DRM
  */
 public class Person {
 	private long id;

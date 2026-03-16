@@ -1,6 +1,6 @@
 {
 
-    "AUTH_001": "Missing credentials. Please provide both username and password.",
+    "UNAUTH_001": "Missing credentials. Please provide both username and password.",
     "AUTH_002": "Invalid username or password. Please check your credentials and try again.",
     "AUTH_003": "Account is blocked",
     "REG_001": "All required fields must be provided",

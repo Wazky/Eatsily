@@ -1,6 +1,6 @@
-import Sidebar from "../components/common/sidebar/Sidebar";
-import SidearItem from "../components/common/sidebar/SidebarItem";
+import MainLayout from "../components/layout/MainLayout";
 import useAuthContext from "../context/AuthContext";
+import authService from "../services/auth/AuthService";
 
 export default function HomePage() {
     
@@ -17,40 +17,36 @@ export default function HomePage() {
 
     }
 
+    const handleRefresh = async () => {
+        const response = await authService.refreshToken();
+        if (response.success) {
+            alert("Token refreshed successfully!");
+        }
+            else {
+            alert("Token refresh failed: " + response.error);
+            }
+    }
+
     return (
-        <div className="d-flex align-items-start justify-content-start shadow-lg">
-            <Sidebar>
-                <SidearItem icon="bi-house" text="Home" href="/" active />
-                <SidearItem icon="bi-person" text="Profile" href="/profile" />
-                <SidearItem icon="bi-gear" text="Settings" href="/settings" />
-            </Sidebar>
+        <div className="bg-secondary-400 m-3 p-3 rounded-3 shadow-lg">
+            <h1>Welcome to your dashboard!</h1>
 
-            <div className="flex-grow-1 vh-100 bg-background-500 rounded-3 shadow-lg">
+            {loading && <p>Loading user data...</p>}
 
-                <div className="d-flex justify-content-center aa-bg-secondary mb-4 p-3 shadow-lg"> 
-                    <header className="text-white">Dashboard</header>
-                </div>
+            {error && <p className="text-danger">Error loading user data: {error.message}</p>}
 
+            {user && (
                 <div>
-                    <h1>Welcome to your dashboard!</h1>
-
-                    {loading && <p>Loading user data...</p>}
-
-                    {error && <p className="text-danger">Error loading user data: {error.message}</p>}
-
-                    {user && (
-                        <div>
-                            <p><strong>Id:</strong> {user.id}</p>
-                            <p><strong>Username:</strong> {user.username}</p>
-                            <p><strong>Email:</strong> {user.email}</p>
-                            <p><strong>Role:</strong> {user.role}</p>
-                        </div>
-                    )}
-
-                    <button className="btn btn-secondary mt-3" onClick={handleLogout}>Logout</button>
-
+                    <p><strong>Id:</strong> {user.id}</p>
+                    <p><strong>Username:</strong> {user.username}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Role:</strong> {user.role}</p>
                 </div>
+            )}
 
+            <div className="d-flex gap-2">
+                <button className="aa-bg-primary rounded-2 border-light mt-3" onClick={handleLogout}>Logout</button>
+                <button className="aa-bg-accent rounded-2 border-light mt-3" onClick={handleRefresh}>Refresh Token</button>
             </div>
         </div>
     );

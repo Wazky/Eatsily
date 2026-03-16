@@ -1,7 +1,11 @@
 package es.uvigo.esei.tfg.dao;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +74,18 @@ public abstract class DAO {
      */
     protected boolean isExternalConnection(Connection externalConnection) {
         return externalConnection != null;
+    }
+
+	protected Set<String> getColumnNames(ResultSet result) throws SQLException {
+        ResultSetMetaData metaData = result.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        Set<String> columnNames = new HashSet<>();
+
+        for (int i = 1; i <= columnCount; i++) {
+            columnNames.add(metaData.getColumnLabel(i));
+        }
+
+        return columnNames;
     }
 
 }

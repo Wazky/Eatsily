@@ -7,15 +7,21 @@
  * This file is imported in the main JavaScript file (main.jsx) and can be used throughout the project.
 */
 
+
 /* BASE */
 @import './base/variables.css';
+@import './base/root.css';
 
 /* LAYOUT */
+@import './layout/_sidebar.css';
 
 /* MODULES */
+@import './modules/_buttons.css';
 
 /* STATE */
 @import './state/_hover.css';
+@import './state/_animations.css';
 
 /* THEME */
 @import './theme/_colors.css';
+

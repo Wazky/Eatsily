@@ -18,6 +18,7 @@ import RegisterPage from './pages/auth/RegisterPage.jsx'
 import ErrorPage from './pages/ErrorPage.jsx'
 import HomePage from './pages/HomePage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import SettingsPage from './pages/SettingsPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.PROFILE,
         element: <ProfilePage />
+      },
+      {
+        path: ROUTES.SETTINGS,
+        element: <SettingsPage />
       }
     ],
   },

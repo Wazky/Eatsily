@@ -1,8 +1,39 @@
 {
+    "pages": {
+        "home": "Home",
+        "profile": "Profile",
+        "settings": "Settings"
+    },
     "lang": {
         "en": "English",
         "es": "Spanish",
         "gl": "Galician"
+    },
+    "sidebar": {
+        "sections": {
+            "home": "Home",
+            "profile": "Profile",
+            "settings": "Settings"
+        },
+        "actions": {
+            "toggle": {
+                "open": "Open sidebar",
+                "close": "Close sidebar"
+            },
+            "logout": "Logout"
+        },
+        "user": {
+            "guest": {
+                "name": "Guest",
+                "initials": "GU",
+                "email": "guest@eatsily.com"
+            },
+            "initials": "Initials",
+            "email": "Email",
+            "role": "Role",
+            "memberSince": "Member since {{date}}"
+        }     
+        
     },
     "validation": {
         "fieldRequired": "{{field}} is required",

@@ -1,14 +1,14 @@
-package es.uvigo.esei.tfg.services;
+package es.uvigo.esei.tfg.services.user;
 
-import es.uvigo.esei.tfg.dao.PeopleDAO;
-import es.uvigo.esei.tfg.dao.UsersDAO;
+import es.uvigo.esei.tfg.dao.user.PeopleDAO;
+import es.uvigo.esei.tfg.dao.user.UsersDAO;
+import es.uvigo.esei.tfg.dto.UserProfileResponse;
 import es.uvigo.esei.tfg.dto.auth.RegisterRequest;
-import es.uvigo.esei.tfg.entities.Person;
-import es.uvigo.esei.tfg.entities.User;
+import es.uvigo.esei.tfg.entities.user.Person;
+import es.uvigo.esei.tfg.entities.user.User;
 
 import es.uvigo.esei.tfg.exceptions.DAOException;
-
-
+import es.uvigo.esei.tfg.util.JwtUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,10 +22,12 @@ public class UserPersonService {
 
     private final UsersDAO usersDAO;
     private final PeopleDAO peopleDAO;
+    private final JwtUtil jwtUtil;
 
     public UserPersonService() {
         this.usersDAO = new UsersDAO();
         this.peopleDAO = new PeopleDAO();
+        this.jwtUtil = new JwtUtil();
     }
 
     /**
@@ -84,6 +86,72 @@ public class UserPersonService {
                 }
             }
         }
+    }
+
+    public UserProfileResponse getById(long id)
+    throws IllegalArgumentException, DAOException {
+        if (id <= 0) {
+            throw new IllegalArgumentException("User ID must be a positive number");
+        }
+
+        User user = usersDAO.get(id);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        Person person = peopleDAO.get(user.getPerson().getId());
+        if (person == null) {
+            throw new IllegalArgumentException("Associated person not found");
+        }
+
+        return new UserProfileResponse(
+            user.getId(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getRole(),
+            user.getCreationDate().toLocalDate(),
+            user.getLastLogin().toLocalDate(),
+            person.getName(),
+            person.getSurname()
+        );
+    }
+
+    public UserProfileResponse getProfile(String authHeader) 
+    throws IllegalArgumentException, DAOException {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid Authorization header");
+        }
+
+        String token = jwtUtil.extractTokenFromHeader(authHeader);
+        if (token == null) {
+            throw new IllegalArgumentException("Invalid or missing token in Authorization header");
+        }
+
+        String username = jwtUtil.getUsernameFromToken(token);
+        if (username == null) {
+            throw new IllegalArgumentException("Invalid token: unable to extract username");
+        }
+
+        User user = usersDAO.getByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found for username: " + username);
+        }
+
+        Person person = peopleDAO.get(user.getPerson().getId());
+        if (person == null) {
+            throw new IllegalArgumentException("Associated person not found for user: " + username);
+        }
+
+        return new UserProfileResponse(
+            user.getId(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getRole(),
+            user.getCreationDate().toLocalDate(),
+            user.getLastLogin().toLocalDate(),
+            person.getName(),
+            person.getSurname()
+        );
     }
 
     /**

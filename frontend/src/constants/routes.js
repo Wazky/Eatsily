@@ -14,7 +14,8 @@ export const ROUTES = {
     
     // Dashboard route 
     HOME: "/",
-    PROFILE: "/profile",        
+    PROFILE: "/profile",  
+    SETTINGS: "/settings",      
 
 
 }

@@ -4,7 +4,7 @@ export const SidebarContext = createContext(null);
 
 export const SidebarProvider = ({ children }) => {
     
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
     return (
         <SidebarContext value={{ isCollapsed, setIsCollapsed }} >

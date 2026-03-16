@@ -22,8 +22,6 @@ export default function LoginPage() {
             imgSrc={loginImg}
             altText={t('loginPage.main.sideImageAlt')}
         />
-
-
     
         {/* Content Container */}
         <AuthContentContainer>

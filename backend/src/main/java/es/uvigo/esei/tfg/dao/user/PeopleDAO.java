@@ -1,4 +1,4 @@
-package es.uvigo.esei.tfg.dao;
+package es.uvigo.esei.tfg.dao.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import es.uvigo.esei.tfg.entities.Person;
+import es.uvigo.esei.tfg.dao.DAO;
+import es.uvigo.esei.tfg.entities.user.Person;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 
 /**

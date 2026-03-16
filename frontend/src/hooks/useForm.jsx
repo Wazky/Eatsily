@@ -60,7 +60,7 @@ export default function useForm(initialState, validationSchema = {}, onSubmit) {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-
+        
         // Validate the form before submission
         const errors = validateForm();
         setFormErrors(errors);

@@ -1,28 +1,21 @@
-package es.uvigo.esei.tfg.services;
+package es.uvigo.esei.tfg.services.user;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import es.uvigo.esei.tfg.dao.PeopleDAO;
-import es.uvigo.esei.tfg.dao.TokenDAO;
-import es.uvigo.esei.tfg.dao.UsersDAO;
+import es.uvigo.esei.tfg.dao.user.UsersDAO;
 import es.uvigo.esei.tfg.dto.auth.LoginRequest;
 import es.uvigo.esei.tfg.dto.ErrorResponse;
 import es.uvigo.esei.tfg.dto.TokenResponse;
 import es.uvigo.esei.tfg.dto.UserResponse;
 import es.uvigo.esei.tfg.dto.auth.AuthResponse;
 import es.uvigo.esei.tfg.dto.auth.RegisterRequest;
-import es.uvigo.esei.tfg.entities.Person;
-import es.uvigo.esei.tfg.entities.Token;
-import es.uvigo.esei.tfg.entities.User;
+import es.uvigo.esei.tfg.entities.user.Token;
+import es.uvigo.esei.tfg.entities.user.User;
 import es.uvigo.esei.tfg.exceptions.AccountBlockedException;
 import es.uvigo.esei.tfg.exceptions.AuthenticationException;
 import es.uvigo.esei.tfg.exceptions.ValidationException;
@@ -30,9 +23,6 @@ import es.uvigo.esei.tfg.exceptions.DAOException;
 import es.uvigo.esei.tfg.util.JwtUtil;
 
 public class AuthService {
-
-    private final static long JWT_EXPIRATION_TIME =  15 * 60 * 1000; // 15 minutes
-    private final static long JWT_REFRESH_TOKEN_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days
 
     private final static Logger LOG = Logger.getLogger(AuthService.class.getName());
     private final static int MAX_FAILED_LOGIN_ATTEMPTS = 5;
@@ -42,17 +32,13 @@ public class AuthService {
     private final UserPersonService userPersonService;
     private final TokenManagmentService tokenManagmentService;
 
-    private final PeopleDAO peopleDAO;
     private final UsersDAO usersDAO;
-    private final TokenDAO  tokenDAO;
     
     public AuthService() {
         this.jwtUtil = new JwtUtil();
         this.userPersonService = new UserPersonService();
         this.tokenManagmentService = new TokenManagmentService();
-        this.peopleDAO = new PeopleDAO();
         this.usersDAO = new UsersDAO();
-        this.tokenDAO = new TokenDAO();
     }
 
     /**
@@ -143,7 +129,10 @@ public class AuthService {
      */
     public void logout(String authHeader) 
     throws IllegalArgumentException, DAOException {
-    
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid Authorization header");
+        }
+            
         String token = jwtUtil.extractTokenFromHeader(authHeader);
         if (token == null) {
             LOG.warning("Missing or invalid Authorization header for logout");

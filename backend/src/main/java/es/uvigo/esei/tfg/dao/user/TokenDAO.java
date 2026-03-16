@@ -1,4 +1,4 @@
-package es.uvigo.esei.tfg.dao;
+package es.uvigo.esei.tfg.dao.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import es.uvigo.esei.tfg.entities.Token;
-import es.uvigo.esei.tfg.entities.User;
+import es.uvigo.esei.tfg.dao.DAO;
+import es.uvigo.esei.tfg.entities.user.Token;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 
 public class TokenDAO extends DAO {
@@ -97,7 +97,7 @@ public class TokenDAO extends DAO {
         }
         
         try (final Connection conn = this.getConnection(null)) {
-            final String query = "SELECT * FROM tokens WHERE id_token = ?";
+            final String query = "SELECT * FROM tokens WHERE token = ?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
                 statement.setString(1, token);
@@ -170,12 +170,12 @@ public class TokenDAO extends DAO {
      */
     private Token rowToEntity(ResultSet result) throws SQLException {
         return new Token(
-            result.getInt("id"),
+            result.getInt("id_token"),
             result.getString("token"),
             result.getString("token_type"),
             result.getBoolean("expired"),
             result.getBoolean("revoked"),
-            result.getLong("id_user")
+            result.getLong("user_id")
         );
     }
 

@@ -1,7 +1,23 @@
 {
+    "pages": {
+        "home": "Inicio",
+        "profile": "Perfil",
+        "settings": "Axustes"
+    },
     "lang": {
         "en": "Inglés",
         "es": "Castelán",
         "gl": "Galego"
+    },
+    "validation": {
+        "fieldRequired": "{{field}} é obrigatorio",
+        "minLength": "{{field}} debe ter polo menos {{length}} caracteres",
+        "maxLength": "{{field}} debe ter como máximo {{length}} caracteres",
+        "alphabetic": "{{field}} debe conter só letras",
+        "alphanumeric": "{{field}} debe conter só letras e números",
+        "alphanumericUnderscore": "{{field}} debe conter só letras, números e guións baixos",
+        "email": "Por favor, introduce un enderezo de email válido",
+        "password": "O contrasinal debe conter polo menos unha letra e un número",
+        "confirmPasswordMatch": "Os contrasinais non coinciden"
     }
 }

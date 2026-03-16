@@ -1,4 +1,4 @@
-package es.uvigo.esei.tfg.entities;
+package es.uvigo.esei.tfg.entities.user;
 
 import static java.util.Objects.requireNonNull;
 
@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 
 /**
  * An entity that represents a user.
- * 
- * @author DRM
  */
 public class User {
 	
@@ -25,6 +23,13 @@ public class User {
 
 	// Constructor needed for the JSON conversion
 	public User() {}
+
+	/**
+	 * Constructs a new instance of {@link User} with only the id.
+	 */
+	public User(long id) {
+		this.id = id;
+	}
 
 	/**
 	 * Constructs a new instance of {@link User}.

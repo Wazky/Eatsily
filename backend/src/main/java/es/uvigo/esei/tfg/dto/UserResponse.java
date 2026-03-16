@@ -19,6 +19,8 @@ public class UserResponse implements Serializable {
         this.role = role;
     }
 
+    // Getters and setters
+
     public long getId() {
         return id;
     }

@@ -1,7 +1,12 @@
-package es.uvigo.esei.tfg.entities;
+package es.uvigo.esei.tfg.entities.user;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * This class represents a token that is used for authentication and authorization purposes.
+ * It contains information about the token itself, its type, whether it is expired or revoked, 
+ * and the ID of the user it belongs to.
+ */
 public class Token {
     
     private long id;
@@ -41,7 +46,7 @@ public class Token {
     }
 
     public long getId() { return id; }
-    public void setId(long id) { this.id = requireNonNull(id);}
+    public void setId(long id) { this.id = id; }
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = requireNonNull(token); }
@@ -56,6 +61,6 @@ public class Token {
     public void setRevoked(boolean revoked) { this.revoked = revoked; }
 
     public long getIdUser() { return idUser; }
-    public void setIdUser(long idUser) { this.idUser = requireNonNull(idUser); }
+    public void setIdUser(long idUser) { this.idUser = idUser; }
 
 }

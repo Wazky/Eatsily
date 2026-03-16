@@ -1,7 +1,5 @@
 package es.uvigo.esei.tfg.util;
 
-import es.uvigo.esei.tfg.entities.User;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,6 +9,8 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
+
+import es.uvigo.esei.tfg.entities.user.User;
 
 public class JwtUtil {
     

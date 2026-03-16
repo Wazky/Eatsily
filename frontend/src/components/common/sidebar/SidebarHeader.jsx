@@ -7,6 +7,8 @@ export default function SidebarHeader() {
     const { isCollapsed, setIsCollapsed } = useSidebarContext();
     const headerTitle = "EATSILY";
 
+    console.log("SidebarHeader Rendered. isCollapsed:", isCollapsed);
+
     return (    
     <div className={`d-flex justify-content-${isCollapsed ? "center" : "start"} align-items-center position-relative`}>
         
@@ -22,14 +24,12 @@ export default function SidebarHeader() {
             </h2>
             )}
         </Link>
-
         
         <button 
-            className="btn overflow-x-visible position-absolute translate-middle-x bg-text-important fs-4 rounded-circle hover-bright-text" 
-            style={{ right: '-65px' }}
+            className="sidebar-toggle btn-circle-large aa-btn-primary hover-bright" 
             onClick={() => setIsCollapsed(!isCollapsed)}>
             
-            <i className={`bi bi-list txt-secondary-important`}></i>
+            <i className={`bi bi-list txt-text-important`}></i>
         </button>
         
     </div>

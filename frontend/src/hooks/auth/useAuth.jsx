@@ -1,19 +1,24 @@
-import { useState, useCallback, useEffect } from 'react';
-import authService from '../../services/AuthService';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import tokenManager from '../../services/auth/tokenManager';
+import authService from '../../services/auth/AuthService';
 
 export default function useAuth() {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const [isInitialized, setIsInitialized] = useState(false);
 
+    const isRefreshing = useRef(false);
+
+    /**
+     * Initialization
+     */
     useEffect(() => {
         const initializeAuth = () => {
             try {
-                const token = authService.getAccessToken();
-                const userData = authService.getUserData();
+                const token = tokenManager.getAccessToken();
+                const userData = tokenManager.getUserData();
 
                 console.log('Initializing authentication - token:', token);
                 console.log('Initializing authentication - userData:', userData);
@@ -39,6 +44,38 @@ export default function useAuth() {
         initializeAuth();
     }, []);
 
+    useEffect(() => {
+        if (!isAuthenticated) return;
+
+        const checkTokenValidity = async () => {
+            const accessToken = tokenManager.getAccessToken();
+
+            if (!accessToken || isRefreshing.current) return;
+
+            if (tokenManager.isTokenExpiringSoon(accessToken)) {
+
+                isRefreshing.current = true;
+                
+                const result = await authService.refreshToken();
+
+                if (!result.success) {
+                    console.error('Token refresh failed:', result.error);
+                    await handleLogout();
+                } else {
+                    console.log('Token refreshed successfully');
+                }
+
+                isRefreshing.current = false;
+            
+                }
+        };
+
+        const interval = setInterval(checkTokenValidity, 60 * 1000); // Check every minute
+
+        checkTokenValidity(); // Initial check on mount
+
+        return () => clearInterval(interval);
+    }, [isAuthenticated]);
 
     /**
      * LOGIN
@@ -119,91 +156,43 @@ export default function useAuth() {
      * LOGOUT
      */
     const logout = useCallback(async () => {
+        return await handleLogout();
+    }, []);
+
+    const handleLogout = async () => {
         setLoading(true);
         setError(null);
 
         try {
             const result = await authService.logout();
 
-            console.log('Logout Hook:', result);
+            clearAuthStates();
 
-            if (result.success) {
-                clearAuthStates();
-                return { success: true };
-            
-            } else {
-                setError(result.error);
-            }
+            return { success: true };
 
         } catch (err) {
-            console.error('Logout error Hook:', err);
-            // Clear authentication states anyway
+            console.error('Logout error:', err);
             clearAuthStates();
             return { success: true };
 
         } finally {
             setLoading(false);
         }
-    }, []);
-
-    const ping = useCallback(async () => {
-        try {
-            const result = await authService.ping();
-
-            if (result.success) {
-                console.log('Ping successful:', result.data);
-                return { success: true, data: result.data };
-            } else {
-                console.error('Ping failed:', result.error);
-                return { success: false, error: result.error };
-            }
-        } catch (err) {
-            console.error('Ping error:', err);  
-            return { success: false, error: err};
-        }          
-
-    }, []);
-
-    const debugPing = useCallback(async () => {
-        try {
-            const result = await authService.debugPing();
-            return { success: true, data: result };
-        } catch (err) {
-            console.error('Debug ping error:', err);
-            return { success: false, error: err };
-        }
-    }, []);
-
-    const debugPingSecured = useCallback(async () => {
-        try {
-            const result = await authService.debugPingSecured();
-            return { success: true, data: result };
-        } catch (err) {
-            console.error('Debug ping secured error:', err);
-            return { success: false, error: err };
-        }
-    }, []);
-
-    const debugEchoHeader = useCallback(async () => {
-        try {
-            const result = await authService.debugEchoHeader();
-            return { success: true, data: result };
-        } catch (err) {
-            console.error('Debug echo header error:', err);
-            return { success: false, error: err };
-        }
-    }, []);
-
+    };
 
     /**
      * Clear all authentication-related states (user, isAuthenticated, error) 
-     * - used after logout or when no valid token is found
+     * used after logout or when no valid token is found
      */
     const clearAuthStates = useCallback(() => {
         setUser(null);
         setIsAuthenticated(false);
         setError(null);
-    })
+    }, []);
+
+    const clearError = useCallback(() => {
+        setError(null);
+    }, []);
 
     return {
         user,
@@ -214,10 +203,7 @@ export default function useAuth() {
         login,
         register,
         logout,
-        ping,
-        debugPing,
-        debugPingSecured,
-        debugEchoHeader
+        clearError
     };
 
 }

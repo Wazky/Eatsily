@@ -75,6 +75,8 @@
 .bg-background-800 { background-color: var(--background-800); }
 .bg-background-900 { background-color: var(--background-900); }
 
+.bg-background-important { background-color: var(--background-500) !important; }
+
 
 /* TEXT */
 .aa-bg-text {
@@ -130,7 +132,8 @@
     color: var(--accent-500);
 }   
 
-.aa-txt-background {
+.aa-txt-background,
+.aa-txt-background * {
     color: var(--background-500);
 }
 

@@ -1,13 +1,19 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 import { ROUTES } from "../constants/routes";
+import MainLayout from "../components/layout/MainLayout";
+
+const PAGES_TITLES = {
+    [ROUTES.HOME]: "pages.home",
+    [ROUTES.PROFILE]: "pages.profile",
+    [ROUTES.SETTINGS]: "pages.settings",
+}
 
 export default function ProtectedRoute() {
+    const location = useLocation();
     const { isAuthenticated, isInitialized, loading } = useAuthContext();
 
-    console.log('ProtectedRoute - isAuthenticated:', isAuthenticated);
-    console.log('ProtectedRoute - isInitialized:', isInitialized);
-    console.log('ProtectedRoute - loading:', loading);
+    const page = PAGES_TITLES[location.pathname] || "pages.default";
 
     if (loading || !isInitialized) {
         return (
@@ -19,5 +25,16 @@ export default function ProtectedRoute() {
         );
     }
 
-    return isAuthenticated ? <Outlet /> : <Navigate to={ROUTES.LOGIN} />;
+    console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
+
+    if (!isAuthenticated) {
+        return <Navigate to={ROUTES.LOGIN} />;
+    }
+
+    return (
+    <MainLayout page={page}>
+        <Outlet />
+    </MainLayout>
+    );
+
 }

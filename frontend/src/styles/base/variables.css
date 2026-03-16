@@ -40,16 +40,16 @@
 /* ACCENT COLOR - 10% of UI
  * Based on #FCBA04 (golden yellow) 
 */
-  --accent-50:   #fff8e5;  /* Lightest */
-  --accent-100:  #fff1cc;
-  --accent-200:  #ffeab3;
-  --accent-300:  #fedc80;
-  --accent-400:  #fdcb4d;
-  --accent-500:  #fcba04;  /* Base color */
-  --accent-600:  #e0a704;
-  --accent-700:  #c49303;
-  --accent-800:  #a87f03;
-  --accent-900:  #8c6b02;  /* Darkest */
+--accent-50:   #e7f2f1;  /* Lightest */
+--accent-100:  #cfe5e3;
+--accent-200:  #b7d8d5;
+--accent-300:  #87bfba;
+--accent-400:  #57a59f;
+--accent-500:  #0B7A75;  /* Base color */
+--accent-600:  #0a6e69;
+--accent-700:  #09625d;
+--accent-800:  #085551;
+--accent-900:  #074945;  /* Darkest */
 
 /* BACKGROUND COLOR
  * Based on #81B29A (sage green) 
