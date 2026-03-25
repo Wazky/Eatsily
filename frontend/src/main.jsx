@@ -19,6 +19,9 @@ import ErrorPage from './pages/ErrorPage.jsx'
 import HomePage from './pages/HomePage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
+import RecipeListPage from './pages/recipes/RecipeListPage.jsx';
+import MyRecipesPage from './pages/recipes/MyRecipesPage.jsx';
+import RecipeCreatePage from './pages/recipes/RecipeCreatePage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,18 +38,16 @@ const router = createBrowserRouter([
     path: ROUTES.HOME,
     element: <ProtectedRoute />,
     children: [
-      {
-        path: ROUTES.HOME,
-        element: <HomePage />
-      },
-      {
-        path: ROUTES.PROFILE,
-        element: <ProfilePage />
-      },
-      {
-        path: ROUTES.SETTINGS,
-        element: <SettingsPage />
-      }
+      { path: ROUTES.HOME, element: <HomePage /> },
+      { path: ROUTES.PROFILE, element: <ProfilePage /> },
+      { path: ROUTES.SETTINGS, element: <SettingsPage /> },
+
+      // Recipes
+      { path: ROUTES.RECIPES , element: <RecipeListPage />},
+      { path: ROUTES.MY_RECIPES , element: <MyRecipesPage />},
+      { path: ROUTES.RECIPE_DETAIL , element: <></>},
+      { path: ROUTES.RECIPE_CREATE , element: <RecipeCreatePage />},
+      { path: ROUTES.RECIPE_EDIT , element: <></>},
     ],
   },
 ])

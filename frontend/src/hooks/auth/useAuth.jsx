@@ -20,9 +20,6 @@ export default function useAuth() {
                 const token = tokenManager.getAccessToken();
                 const userData = tokenManager.getUserData();
 
-                console.log('Initializing authentication - token:', token);
-                console.log('Initializing authentication - userData:', userData);
-
                 if (token && userData) {
                     setUser(userData);
                     setIsAuthenticated(true);

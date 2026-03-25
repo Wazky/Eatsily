@@ -203,7 +203,7 @@ public class AuthService {
             
             throw new AuthenticationException(
                 new ErrorResponse(
-                    "AUTH_001",
+                    "UNAUTH_001",
                     "Username and password must be provided"     
                 )
             );
@@ -219,7 +219,7 @@ public class AuthService {
 
             throw new AuthenticationException(
                 new ErrorResponse(
-                    "AUTH_002",
+                    "UNAUTH_002",
                     "Invalid credentials"
                 )
             );
@@ -231,7 +231,7 @@ public class AuthService {
             
             throw new AccountBlockedException(
                 new ErrorResponse(
-                    "AUTH_003",
+                    "UNAUTH_003",
                     "User account is blocked due to multiple failed login attempts"
                 )
             );
@@ -241,7 +241,7 @@ public class AuthService {
         if(!validatePassword(password, user)) {
             throw new AuthenticationException(
                 new ErrorResponse(
-                    "AUTH_002",
+                    "UNAUTH_002",
                     "Invalid credentials"
                 )
             );
@@ -318,7 +318,7 @@ public class AuthService {
                 
                 throw new AccountBlockedException(
                     new ErrorResponse(
-                        "AUTH_003",
+                        "UNAUTH_003",
                         "User account is blocked due to multiple failed login attempts"
                     )
                 );
@@ -396,7 +396,6 @@ public class AuthService {
         }
 
         // Additional format validations can be added here (e.g., username format, name/surname format)
-
         return valid;
     }
 

@@ -1,0 +1,23 @@
+
+.recipe-search {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.recipe-search__fields {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.recipe-search__input {
+    flex: 1;
+    min-width: 180px;
+}
+
+.recipe-search__actions {
+    display: flex;
+    gap: 8px;
+}

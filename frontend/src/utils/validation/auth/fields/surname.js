@@ -3,7 +3,7 @@ import { required, minLength, maxLength, alphabetic } from "../../validationHelp
 // == Surname Validation ==
 
 // Surname from Registration Form constants for field names and validation parameters
-const SURNAME_FIELD_NAME = 'Surname';
+const SURNAME_FIELD_NAME = 'entities.user.labels.surname';
 const SURNAME_MIN_LENGTH = 2;
 const SURNAME_MAX_LENGTH = 50;
 

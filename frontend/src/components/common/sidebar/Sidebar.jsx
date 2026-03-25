@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SidebarFooter from "./SidebarFooter";
-import SidebarHeader from "./SidebarHeader";
+import SidebarFooter from "./SideBarFooter";
+import SidebarHeader from "./SideBarHeader";
 import useSidebarContext, { SidebarContext, SidebarProvider } from "../../../context/SideBarContext";
 
 export default function Sidebar({ children}) {
@@ -21,6 +21,7 @@ export default function Sidebar({ children}) {
             <div className="text-center rounded-top bg-primary-500 px-3 mt-1">
                 <SidebarFooter />
             </div>  
+            
         </nav>
     </aside>            
     );

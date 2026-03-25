@@ -56,6 +56,9 @@ public class AuthResource extends BaseResource {
         
         } catch (ValidationException ve) {
             LOG.log(Level.FINE, "Validation failed for registration request: " + request.getUsername(), ve);
+            if (ve.getError() != null) {
+                return badRequest(ve.getError());
+            }
             return badRequest(ve.getMessage());
         
         } catch (DAOException e) {
@@ -77,10 +80,16 @@ public class AuthResource extends BaseResource {
         
         } catch (AuthenticationException ae) {
             LOG.log(Level.FINE, "Authentication failed for user: " + request.getUsername(), ae);
+            if (ae.getError() != null) {
+                return unauthorized(ae.getError());
+            }
             return unauthorized(ae.getMessage());
 
         } catch (AccountBlockedException abe) {
             LOG.log(Level.WARNING, "Blocked account login attempt for user: " + request.getUsername(), abe);
+            if (abe.getError() != null) {
+                return unauthorized(abe.getError());
+            }
             return forbidden(abe.getMessage());
 
         } catch (DAOException e) {

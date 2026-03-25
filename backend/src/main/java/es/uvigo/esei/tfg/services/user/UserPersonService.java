@@ -12,8 +12,10 @@ import es.uvigo.esei.tfg.util.JwtUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -142,13 +144,18 @@ public class UserPersonService {
             throw new IllegalArgumentException("Associated person not found for user: " + username);
         }
 
+        LocalDate lastLoginDate = null;
+        if (user.getLastLogin() != null) {
+            lastLoginDate = user.getLastLogin().toLocalDate();
+        }
+
         return new UserProfileResponse(
             user.getId(),
             user.getUsername(),
             user.getEmail(),
             user.getRole(),
             user.getCreationDate().toLocalDate(),
-            user.getLastLogin().toLocalDate(),
+            lastLoginDate,
             person.getName(),
             person.getSurname()
         );

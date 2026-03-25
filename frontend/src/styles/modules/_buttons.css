@@ -1,8 +1,89 @@
+/* Solid button styles */
+
+.btn.aa-primary {
+    background: var(--primary-500);
+    color: var(--text-500);
+    border: none;
+}
+.btn.aa-primary:hover {
+    background: var(--primary-700);
+}
+
+.btn.aa-secondary {
+    background: var(--secondary-500);
+    color: var(--text-500);
+    border: none;
+}
+.btn.aa-secondary:hover {
+    background: var(--secondary-600);
+}
+
+.btn.aa-accent {
+    background: var(--accent-500);
+    color: var(--text-500);
+    border: none;
+}
+.btn.aa-accent:hover {
+    background: var(--accent-700);
+}
+
+.btn.aa-danger {
+    background: var(--error);
+    color: var(--error-light);
+    border: none;
+}
+.btn.aa-danger:hover {
+    background: #d32f2f;
+}
+
+/* Outline button styles */
+
+.btn.aa-outline-primary {
+    background: transparent;
+    color: var(--primary-500);
+    border: 1.5px solid var(--primary-500);
+}
+.btn.aa-outline-primary:hover {
+    background: var(--primary-500);
+    color: var(--text-500);
+}
+
+.btn.aa-outline-secondary {
+    background: transparent;
+    color: var(--secondary-500);
+    border: 1.5px solid var(--secondary-500);
+}
+.btn.aa-outline-secondary:hover {
+    background: var(--secondary-500);
+    color: var(--text-500);
+}
+
+.btn.aa-outline-accent {
+    background: transparent;
+    color: var(--accent-500);
+    border: 1.5px solid var(--accent-500);
+}
+.btn.aa-outline-accent:hover {
+    background: var(--accent-500);
+    color: var(--text-500);
+}
+
+.btn.aa-outline-danger {
+    background: transparent;
+    color: var(--error);
+    border: 1.5px solid var(--error);
+}
+.btn.aa-outline-danger:hover {
+    background: var(--error);
+    color: var(--error-light);
+}
+
+/* Circle buttons */
+
 .btn-circle {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-
 }
 
 .btn-circle i {
@@ -25,4 +106,63 @@
     border: 1px solid var(--text-500);
 }
 
+/* Ghost button styles */
 
+.btn.aa-ghost {
+    background: rgba(244, 241, 222, 0.12);
+    color: var(--text-500);
+    border: 1px solid rgba(244, 241, 222, 0.3);
+}
+.btn.aa-ghost:hover { background: rgba(244, 241, 222, 0.22); }
+
+/* Size variants */
+
+.btn.aa-sm {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 6px;
+}
+
+.btn.aa-lg {
+    font-size: 15px;
+    padding: 11px 24px;
+    border-radius: 10px;
+}
+
+.btn.aa-pill { border-radius: 50px !important; }
+
+/* Icon buttons */
+
+.aa-btn-icon {
+    background: rgba(244, 241, 222, 0.12);
+    border: 1px solid rgba(244, 241, 222, 0.3);
+    border-radius: 8px;
+    padding: 7px 9px;
+    cursor: pointer;
+    color: var(--text-500);
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.15s ease;
+    font-size: 15px;
+}
+
+.aa-btn-icon:hover { background: rgba(244, 241, 222, 0.22); }
+.aa-btn-icon:active { transform: scale(0.97); }
+
+.aa-btn-icon--danger:hover {
+    background: var(--error-light);
+    color: var(--error);
+    border-color: var(--error);
+}
+
+.aa-btn-icon--accent:hover {
+    background: var(--accent-500);
+    color: var(--text-500);
+    border-color: var(--accent-500);
+}
+
+.aa-btn-icon--secondary:hover {
+    background: var(--secondary-500);
+    color: var(--text-500);
+    border-color: var(--secondary-500);
+}

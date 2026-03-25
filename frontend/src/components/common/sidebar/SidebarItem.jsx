@@ -12,10 +12,7 @@ export default function SidearItem({ icon, text, href, active, alert }) {
     <li className={`rounded-2 p-1 m-2 is-hoverable ${active ? "bg-secondary-500" : ""} aa-txt-text`} >
 
         {/* Link Component for navigation */}
-        <Link 
-            className="nav-link" 
-            to={href}
-        >
+        <Link className="nav-link" to={href}>
 
             {/* Icon and Text Container */}
             <div className={`fs-4 ${isCollapsed ? "text-center" : "text-start"} fw-bold`}>
@@ -24,23 +21,23 @@ export default function SidearItem({ icon, text, href, active, alert }) {
                 {!isCollapsed && 
                 <span className="overflow-hidden ms-2">
                     {upperFirst(t(text))}
-                </span>}
-            
+                </span>
+                }            
+
             </div>
 
             {/* Alert indicator  (Complete if needed) */}
             {alert && (<span></span>)}
 
-            {/* Hover text for collapsed state */}
-            {isCollapsed && (
-                <div>
-                    <span className={`sidebar-item-hover-text ${active ? "bg-secondary-500" : "bg-primary-400"}`}>
-                        {upperFirst(t(text))}
-                    </span>      
-                </div>
-            )}
-
         </Link>
+
+        {/* Hover text for collapsed state */}
+        {isCollapsed && (
+            <span className={`sidebar-item-hover-text ${active ? "bg-secondary-500" : "bg-primary-400"}`}>
+                {upperFirst(t(text))}
+            </span>      
+        )}
+
     </li>
     );
 }

@@ -1,8 +1,16 @@
-
 export const validationMessage = (t, error) => {
     if (!error) return null;
 
-    return t(`common:${error.code}`, error.params);
+    const translatedParams = error.params
+        ? (Object.fromEntries(
+            Object.entries(error.params).map(([key, value]) => [
+                key,
+                t(`common:${value}`) || value
+            ])
+        ))
+        : undefined;
+
+    return t(`common:${error.code}`, translatedParams);
 };
 
 

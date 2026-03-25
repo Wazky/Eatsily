@@ -1,5 +1,5 @@
-import Sidebar from "../common/sidebar/Sidebar";
-import SidearItem from "../common/sidebar/SidebarItem";
+import Sidebar from "../common/sidebar/SideBar";
+import SidearItem from "../common/sidebar/SideBarItem";
 import Header from "../common/header/Header";
 
 import { useLocation } from "react-router-dom";
@@ -16,13 +16,14 @@ export default function MainLayout({ page, children }) {
         {/* Sidebar Component */}
         <Sidebar>
             <SidearItem icon="bi-house" text="pages.home" href={ROUTES.HOME} active={location.pathname === ROUTES.HOME} />
+            <SidearItem icon="bi-file-earmark-post" text="pages.recipes" href={ROUTES.RECIPES} active={location.pathname === ROUTES.RECIPES} />
+            <SidearItem icon="bi-journal" text="pages.myRecipes" href={ROUTES.MY_RECIPES} active={location.pathname === ROUTES.MY_RECIPES} />
             <SidearItem icon="bi-person" text="pages.profile" href={ROUTES.PROFILE} active={location.pathname === ROUTES.PROFILE} />
             <SidearItem icon="bi-gear" text="pages.settings" href={ROUTES.SETTINGS} active={location.pathname === ROUTES.SETTINGS} />
         </Sidebar>
 
         {/* Main Content Area */}
-        <main className="main-content flex-grow-1 h-100 overflow-auto bg-background-600 rounded-3 shadow-lg"
-        >
+        <main className="main-content flex-grow-1 h-100 overflow-auto bg-background-600 rounded-3 shadow-lg">
 
             {/* Page Header */}
             <Header title={page}/>

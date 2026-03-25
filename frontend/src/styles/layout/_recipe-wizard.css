@@ -1,0 +1,404 @@
+/* ==========================================================================
+ * RECIPE WIZARD
+ * ========================================================================== */
+
+/* ── Container ────────────────────────────────────────────────────────────── */
+
+.wizard-container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+}
+
+.wizard-card {
+    background: var(--accent-500);
+    border: 1px solid var(--text-500);
+    border-radius: 10px;
+    padding: 1.75rem;
+
+
+    /* Override Bootstrap's invalid styles */
+    --bs-form-invalid-border-color: var(--secondary-500);
+    --bs-form-invalid-color: var(--secondary-500);
+    --bs-form-feedback-icon-invalid-color: var(--secondary-500);
+    --bs-form-feedback-icon-invalid: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23E07A5F'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23E07A5F' stroke='none'/%3e%3c/svg%3e");
+}
+
+.wizard-card__header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--text-500);
+}
+
+.wizard-card__title {
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--text-500);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wizard-card__title i {
+    color: var(--text-500);
+    font-size: 18px;
+}
+
+/* ── Stepper ──────────────────────────────────────────────────────────────── */
+
+.wizard-stepper {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+}
+
+.wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    position: relative;
+}
+
+.wizard-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 60%;
+    width: 80%;
+    height: 2px;
+    background: var(--text-500);
+    z-index: 0;
+}
+
+.wizard-step--done:not(:last-child)::after {
+    background: var(--accent-500);
+}
+
+.wizard-step__circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid var(--primary-200);
+    background: var(--text-500);
+    color: var(--primary-300);
+    z-index: 1;
+    transition: all 0.2s ease;
+}
+
+.wizard-step--active .wizard-step__circle {
+    background: var(--accent-500);
+    color: var(--text-500);
+    border-color: var(--text-500);
+}
+
+.wizard-step--done .wizard-step__circle {
+    background: var(--accent-500);
+    color: var(--text-500);
+    border-color: var(--accent-500);
+}
+
+.wizard-step__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--primary-400);
+    text-align: center;
+    transition: color 0.2s ease;
+}
+
+.wizard-step--active .wizard-step__label { color: var(--text-500); }
+.wizard-step--done .wizard-step__label   { color: var(--accent-600); }
+
+/* ── Step content ─────────────────────────────────────────────────────────── */
+
+.wizard-step-content {
+    min-height: 200px;
+}
+
+/* ── Form inputs ──────────────────────────────────────────────────────────── */
+
+.wizard-card .form-control.is-invalid {
+    border: 2px solid var(--secondary-500);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23E07A5F'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23E07A5F' stroke='none'/%3e%3c/svg%3e");
+}
+
+.wizard-card .form-select.is-invalid {
+    border: 2px solid var(--secondary-500);
+    background-image:
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%233D405B' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"),
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23E07A5F'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23E07A5F' stroke='none'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center, right 2.25rem center;
+    background-size: 16px 12px, 12px 12px;
+    background-repeat: no-repeat, no-repeat;
+    padding-right: 4rem;
+}
+
+.aa-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.aa-required {
+    color: var(--error);
+    margin-left: 2px;
+}
+
+.wizard-card .aa-input {
+    background-color: var(--text-500);
+    border: 1px solid var(--primary-200);
+    border-radius: 6px;
+    color: var(--primary-500);
+    font-size: 13px;
+    transition: border-color 0.15s ease;
+}
+
+.aa-input:focus {
+    background-color: var(--text-200);
+    border-color: var(--primary-500);
+    box-shadow: none;
+    color: var(--primary-500);
+}
+
+.aa-input-addon {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    color: var(--primary-400);
+    font-size: 12px;
+}
+
+/* ── Ingredient rows ──────────────────────────────────────────────────────── */
+
+.ingredient-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.ingredient-row--header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr auto;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+/* ── Step rows ────────────────────────────────────────────────────────────── */
+
+.step-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: transparent;
+    border-radius: 8px;
+    
+}
+
+.step-row__number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary-500);
+    color: var(--text-500);    
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+.step-row__fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ── Add button ───────────────────────────────────────────────────────────── */
+
+.wizard-add-btn {
+    width: 100%;
+    background: transparent;
+    border: 1.5px dashed var(--text-500);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13px;
+    color: var(--text-500);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+    transition: all 0.15s ease;
+}
+
+.wizard-add-btn:hover {
+    background: var(--text-500);
+    border-color: var(--accent-500);
+    color: var(--primary-500);
+}
+
+/* ── Publish options ──────────────────────────────────────────────────────── */
+
+.publish-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.publish-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1.5px solid var(--text-500);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: var(--text-500);
+}
+
+.publish-option:hover { border-color: var(--text-300); }
+
+.publish-option--on--default {
+    background: var(--background-500);
+    border-color: var(--accent-500);
+}
+
+.publish-option--on--primary {
+    background: var(--primary-500);
+    border-color: var(--accent-500);
+}
+
+
+.publish-option__toggle {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--primary-200);
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.publish-option__toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text-500);
+    top: 3px;
+    left: 3px;
+    transition: left 0.2s ease;
+}
+
+.publish-option__toggle--on--default {
+    background: var(--background-400);
+}
+
+.publish-option__toggle--on--primary {
+    background: var(--primary-400);
+}
+
+
+
+.publish-option__toggle--on--default::after,
+.publish-option__toggle--on--primary::after { left: 21px; }
+
+.publish-option__info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.publish-option__icon {
+    font-size: 20px;
+    color: var(--primary-400);
+}
+
+.publish-option--on--default .publish-option__icon,
+.publish-option--on--primary .publish-option__icon {
+    color: var(--text-500);
+}
+
+.publish-option__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-500);
+    margin: 0;
+}
+
+.publish-option__title--on--default,
+.publish-option__title--on--primary {
+    color: var(--text-500);
+}
+
+.publish-option__sub {
+    font-size: 12px;
+    color: var(--primary-400);
+    margin: 0;
+}
+
+.publish-option__sub--on--default,
+.publish-option__sub--on--primary {
+    color: var(--text-400);
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────────── */
+
+.wizard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--text-500);
+}
+
+.wizard-nav__counter {
+    font-size: 12px;
+    color: var(--text-300);
+}
+
+/* ── Alert ────────────────────────────────────────────────────────────────── */
+
+.aa-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.aa-alert--error {
+    background: var(--secondary-500);
+    color: var(--text-500);
+    border: 1px solid var(--error);
+}
+
+.invalid-feedback {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--secondary-500) !important;
+    margin-top: 4px;
+}
+

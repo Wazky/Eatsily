@@ -17,5 +17,11 @@ export const ROUTES = {
     PROFILE: "/profile",  
     SETTINGS: "/settings",      
 
-
+    // Recipes routes
+    RECIPES: "/recipes",
+    MY_RECIPES: "/my-recipes",
+    RECIPE_DETAIL: "/recipes/:id",
+    RECIPE_CREATE: "/recipes/new",
+    RECIPE_EDIT: "/recipes/:id/edit",
+    
 }

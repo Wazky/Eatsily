@@ -68,3 +68,41 @@ export const password = (fieldName) => ({
         code: 'validation.password'
     }
 });
+
+export const positiveInteger = (fieldName) => ({
+    validator: (value) => validators.positiveInteger(value),
+    message: {
+        code: 'validation.positiveInteger',
+        params: { field: fieldName }
+    }
+});
+
+export const nonNegativeInteger = (fieldName) => ({
+    validator: (value) => validators.nonNegativeInteger(value),
+    message: {
+        code: 'validation.nonNegativeInteger',
+        params: { field: fieldName }
+    }
+});
+
+export const minArrayLength = (fieldName, min) => ({
+    validator: (value) => validators.minArrayLength(value, min),
+    message: {
+        code: 'validation.minArrayLength',
+        params: { field: fieldName, length: min }
+    }
+});
+
+export const ingredientValid = (fieldName) => ({
+    validator: (value) => validators.ingredientValid(value),
+    message: {
+        code: 'validation.ingredientInvalid',
+    }
+});
+
+export const stepValid = (fieldName) => ({
+    validator: (value) => validators.stepValid(value),
+    message: {
+        code: 'validation.stepInvalid',
+    }
+});

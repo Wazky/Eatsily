@@ -3,7 +3,7 @@ import { required, minLength, maxLength, alphabetic } from "../../validationHelp
 // == Name Validation ==
 
 // Name from Registration Form constants for field names and validation parameters
-const NAME_FIELD_NAME = 'Name';
+const NAME_FIELD_NAME = 'entities.user.labels.name';
 const NAME_MIN_LENGTH = 2;
 const NAME_MAX_LENGTH = 50;
 

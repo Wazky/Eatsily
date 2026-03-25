@@ -2,7 +2,12 @@
     "pages": {
         "home": "Home",
         "profile": "Profile",
-        "settings": "Settings"
+        "settings": "Settings",
+        "recipes": "Recipes",
+        "myRecipes": "My Recipes",
+        "recipeDetail": "Recipe Detail",
+        "createRecipe": "Create Recipe",
+        "editRecipe": "Edit Recipe"
     },
     "lang": {
         "en": "English",
@@ -33,7 +38,29 @@
             "role": "Role",
             "memberSince": "Member since {{date}}"
         }     
-        
+    },
+    "entities": {
+        "user": {
+            "labels": {
+                "user": "user",
+                "name": "name",
+                "email": "email",
+                "password": "password",
+                "confirmPassword": "confirm password"
+            }
+        },
+        "recipe": {
+            "labels": {
+                "recipe": "recipe",
+                "title": "title",
+                "description": "description",
+                "difficulty": "difficulty",
+                "servings": "servings",
+                "preparationTime": "preparation time",
+                "ingredients": "ingredients",
+                "steps": "steps"
+            }
+        }
     },
     "validation": {
         "fieldRequired": "{{field}} is required",
@@ -43,8 +70,13 @@
         "alphanumeric": "{{field}} must contain only letters and numbers",
         "alphanumericUnderscore": "{{field}} must contain only letters, numbers, and underscores",
         "email": "Please enter a valid email address",
-        "password": "Password must contain at least one letter and one number",
-        "confirmPasswordMatch": "Passwords do not match"
+        "password": "Password must contain at least one letter and one number",        
+        "confirmPasswordMatch": "Passwords do not match",
+        "positiveInteger": "{{field}} must be at least 1",
+        "nonNegativeInteger": "{{field}} must be a non-negative integer",
+        "minArrayLength": "At least {{length}} {{field}} is required",
+        "ingredientInvalid": "Please fill out all required ingredient fields",
+        "stepInvalid": "All steps must have a description"
     }
 
 }

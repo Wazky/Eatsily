@@ -1,0 +1,31 @@
+/* Page layout helpers */
+
+.page-container {
+    padding: 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    font-size: 1.4rem;
+    font-weight: 500;
+    font-style: italic;
+    margin: 0;
+    color: var(--text-500);
+}
+
+.loading-text,
+.error-text {
+    font-size: 0.9rem;
+    padding: 1rem 0;
+    color: var(--secondary-500);
+}
+
+.error-text {
+    color: #e74c3c;
+}

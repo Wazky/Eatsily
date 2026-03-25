@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+
 
 import es.uvigo.esei.tfg.dao.DAO;
 import es.uvigo.esei.tfg.entities.user.Person;
@@ -491,11 +494,17 @@ public class UsersDAO extends DAO {
 		}
 
 		if (columnNames.contains("creation_date")) {
-			user.setCreationDate(result.getObject("creation_date", java.time.LocalDateTime.class));
+			Timestamp createdAt = result.getTimestamp("creation_date");
+			if (createdAt != null) {
+				user.setCreationDate(createdAt.toLocalDateTime());
+			}
 		}
 
 		if (columnNames.contains("last_login")) {
-			user.setLastLogin(result.getObject("last_login", java.time.LocalDateTime.class));
+			Timestamp lastLogin = result.getTimestamp("last_login");
+			if (lastLogin != null) {
+				user.setLastLogin(lastLogin.toLocalDateTime());
+			}
 		}
 
 		return user;

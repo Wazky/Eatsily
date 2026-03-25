@@ -3,7 +3,7 @@ import { required, minLength, maxLength, password } from "../../validationHelper
 // == Password Validation ==
 
 // Password Constants for field name and validation parameters
-const PASSWORD_FIELD_NAME = 'Password';
+const PASSWORD_FIELD_NAME = 'entities.user.labels.password';
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 100;
 

@@ -16,6 +16,13 @@ public abstract class BaseResource {
         return Response.ok().build();
     }
 
+    protected Response error(Response.Status status, ErrorResponse error) {
+        return Response
+            .status(status)
+            .entity(error)
+            .build();
+    }
+
     protected Response error(Response.Status status, String code, String message, Map<String, Object> details) {
         return Response
             .status(status)
@@ -32,6 +39,10 @@ public abstract class BaseResource {
 
     // BAD REQUEST RESPONSES
     
+    protected Response badRequest(ErrorResponse error) {
+        return error(Response.Status.BAD_REQUEST, error);
+    }
+
     protected Response badRequest(String code, String message, Map<String, Object> details) {
         return error(Response.Status.BAD_REQUEST, code, message, details);
     }
@@ -48,7 +59,33 @@ public abstract class BaseResource {
         return badRequest("Bad request");
     }
 
+    // NOT FOUND RESPONSES
+
+    protected Response notFound(ErrorResponse error) {
+        return error(Response.Status.NOT_FOUND, error);
+    }
+
+    protected Response notFound(String code, String message, Map<String, Object> details) {
+        return error(Response.Status.NOT_FOUND, code, message, details);
+    }
+
+    protected Response notFound(String code, String message) {
+        return error(Response.Status.NOT_FOUND, code, message);
+    }
+
+    protected Response notFound(String message) {
+        return notFound("NOT_FOUND_001", message);
+    }
+
+    protected Response notFound() {
+        return notFound("Not found");
+    }
+
     // UNAUTHORIZED RESPONSES
+
+    protected Response unauthorized(ErrorResponse error) {
+        return error(Response.Status.UNAUTHORIZED, error);
+    }
 
     protected Response unauthorized(String code, String message, Map<String, Object> details) {
         return error(Response.Status.UNAUTHORIZED, code, message, details);

@@ -1,13 +1,15 @@
 {
-
+    "BAD_REQ_001": "Bad request. Please check your input and try again.",
     "UNAUTH_001": "Missing credentials. Please provide both username and password.",
-    "AUTH_002": "Invalid username or password. Please check your credentials and try again.",
-    "AUTH_003": "Account is blocked",
+    "UNAUTH_002": "Invalid username or password. Please check your credentials and try again.",
+    "UNAUTH_003": "Account is blocked",
+    "FORB_001": "Access denied. You do not have permission to access this resource.",
     "REG_001": "All required fields must be provided",
     "REG_002": "One or more fields have an invalid format. Please check your input and try again.",
     "REG_003": "Username already exists. Please choose a different username.",
     "REG_004": "Email already exists. Please use a different email address.",
     "SYS_001": "Internal server error",
+
 
     "VALIDATION": {
         "INVALID_EMAIL_FORMAT": "Invalid email format",

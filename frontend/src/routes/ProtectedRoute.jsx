@@ -7,6 +7,11 @@ const PAGES_TITLES = {
     [ROUTES.HOME]: "pages.home",
     [ROUTES.PROFILE]: "pages.profile",
     [ROUTES.SETTINGS]: "pages.settings",
+    [ROUTES.RECIPES]: "pages.recipes",
+    [ROUTES.MY_RECIPES]: "pages.myRecipes",
+    [ROUTES.RECIPE_DETAIL]: "pages.recipeDetail",
+    [ROUTES.RECIPE_CREATE]: "pages.createRecipe",
+    [ROUTES.RECIPE_EDIT]: "pages.editRecipe",
 }
 
 export default function ProtectedRoute() {
@@ -24,8 +29,6 @@ export default function ProtectedRoute() {
             </div>
         );
     }
-
-    console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
 
     if (!isAuthenticated) {
         return <Navigate to={ROUTES.LOGIN} />;

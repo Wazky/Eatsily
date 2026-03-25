@@ -1,0 +1,130 @@
+{
+    "recipeLabels": {
+        "title": "Title",
+        "description": "Description",
+        "preparationTime": "Preparation Time",
+        "cookingTime": "Cooking Time",
+        "difficulty": {
+            "label": "Difficulty",
+            "none": "None",
+            "easy": "Easy",
+            "medium": "Medium",
+            "hard": "Hard"
+        },
+        "servings": "Servings",
+        "privacy": {
+            "label": "Privacy",
+            "public": "Public",
+            "private": "Private"
+        },
+        "lunchbox": "Lunchbox",
+        "ingredients": "Ingredients",
+        "steps": "Steps"    
+    },
+
+    "ingredientLabels": {
+        "name": "Ingredient",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "note": "Note"
+    },
+    
+    "stepLabels": {
+        "title": "Step Title",
+        "instruction": "Instruction"
+    },
+
+    "createNewRecipe": "Create New Recipe",
+    
+    "recipeCreate": {
+        "stepLabels": {
+            "step1": "Basic Information",
+            "step2": "Ingredients",
+            "step3": "Steps",
+            "step4": "Publish"
+        },
+        "wizard": {
+            "form": {
+                "placeholders": {
+                    "title": "Enter recipe title",
+                    "description": "Enter recipe description",
+                    "difficulty": "Select difficulty",
+                    "ingredientName": "Enter ingredient name",
+                    "unit": "Select unit",
+                    "note": "Enter note",
+                    "stepTitle": "Enter step title",
+                    "instruction": "Enter step instruction"                    
+                },
+                "privacy": {
+                    "public": {
+                        "title": "Public - everyone can see this recipe",
+                        "desc": "Share your recipe with the community and get feedback!"
+                    },
+                    "private": {
+                        "title": "Private - only you can see this recipe",
+                        "desc": "Keep your recipe to yourself and only share it with selected users."
+                    }
+                },
+                "lunchbox": {
+                    "title": "Is this recipe suitable for a lunchbox?",
+                    "desc": "Mark this option if your recipe is designed to be packed in a lunchbox, making it perfect for on-the-go meals."
+                }
+            },
+            "actions": {
+                "addIngredient": "Add Ingredient",
+                "addStep": "Add Step",
+                "remove": "Remove"
+            },
+            "nav": {
+                "previous": "Previous",
+                "next": "Next",
+                "stepOf": "Step {{current}} of {{total}}",
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "submitting": "Submitting...",
+                "saveDraft": "Save Draft",
+                "publish": "Publish"
+            }
+        }
+    },
+
+    "recipeList": {
+        "foundRecipes": "Found {{count}} recipes",
+        "myRecipes": "Your culinary creations ({{count}})",
+        "loadingRecipes": "Loading recipes...",
+        "loadingYourRecipes": "Loading your recipes...",
+
+        "recipeGrid": {
+            "emptyGrid": {
+                "comunity": {
+                    "title": "Nothing here yet",
+                    "subtitle": "No recipes have been shared by the community yet.",
+                    "subtitle2": "Be the first to share a recipe!"
+                },
+                "search": {
+                    "title": "No recipes found",
+                    "subtitle": "Try adjusting your search filters"
+                },
+                "myRecipes": {
+                    "title": "You have no personal recipes yet",
+                    "subtitle": "Create your first recipe to get started",
+                    "action": "Create Recipe"  
+                }
+            },
+            "recipeCard": {
+                "metadata": {
+                    "servings": "{{count}} servings",
+                    "totalTime": "{{time}} mins"
+                },
+                "privacy": {
+                    "private": "Private",
+                    "public": "Public"
+                }
+            }
+        }       
+    }
+    
+ 
+
+    
+}

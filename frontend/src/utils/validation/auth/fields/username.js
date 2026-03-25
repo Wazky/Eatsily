@@ -2,7 +2,7 @@ import { required, minLength, maxLength, alphanumericUnderscore } from "../../va
 // == Username Validation ==
 
 // Username Constants for field name and validation parameters
-const USERNAME_FIELD_NAME = 'Username';
+const USERNAME_FIELD_NAME = 'entities.user.labels.username';
 const USERNAME_MIN_LENGTH = 3;
 const USERNAME_MAX_LENGTH = 30;
 

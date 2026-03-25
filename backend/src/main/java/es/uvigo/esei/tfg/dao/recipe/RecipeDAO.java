@@ -4,13 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Set;
+
 
 import es.uvigo.esei.tfg.dao.DAO;
 import es.uvigo.esei.tfg.entities.recipe.Recipe;
+import es.uvigo.esei.tfg.entities.user.User;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 
 /**
@@ -18,6 +22,8 @@ import es.uvigo.esei.tfg.exceptions.DAOException;
  */
 public class RecipeDAO extends DAO {
     private final static Logger LOG = Logger.getLogger(RecipeDAO.class.getName());
+
+    private final static String USER_PREFIX = "user_";
 
     //============     CREATE     ============
     
@@ -75,6 +81,7 @@ public class RecipeDAO extends DAO {
                     try (final ResultSet result = statement.getGeneratedKeys()) { 
                         if (result.next()) {                            
                             recipe.setId(result.getLong(1));
+                            recipe.setCreatedAt(java.time.LocalDateTime.now()); // Set createdAt to current time since we know it was set to NOW() in the query
                             return recipe;
                         } else {
                             LOG.log(Level.SEVERE, "Failed to retrieve generated recipe ID");
@@ -135,10 +142,14 @@ public class RecipeDAO extends DAO {
     public List<Recipe> getPublic()
     throws DAOException {
         try (final Connection conn = this.getConnection(null)) {
-            final String query = "SELECT * FROM recipes WHERE is_public = TRUE ORDER BY created_at DESC";
+            final String query = "SELECT r.*," +
+                " u.username AS " + USER_PREFIX + "username" +
+                " FROM recipes r" +
+                " JOIN users u ON r.user_id = u.id_user" +
+                " WHERE is_public = TRUE" +
+                " ORDER BY created_at DESC";
 
-            try (final PreparedStatement statement = conn.prepareStatement(query)) {
-                statement.setBoolean(1, true);
+            try (final PreparedStatement statement = conn.prepareStatement(query)) {                
 
                 try (final ResultSet result = statement.executeQuery()) {
                     List<Recipe> recipes = new LinkedList<>();
@@ -165,7 +176,12 @@ public class RecipeDAO extends DAO {
     public List<Recipe> getByUserId(long userId) 
     throws DAOException, IllegalArgumentException {
         try (final Connection conn = this.getConnection(null)) {
-            final String query = "SELECT * FROM recipes WHERE user_id=? ORDER BY created_at DESC";
+            final String query = "SELECT r.*," +
+                " u.username AS " + USER_PREFIX + "username" +
+                " FROM recipes r" +
+                " JOIN users u ON r.user_id = u.id_user" +
+                " WHERE user_id=?" +
+                " ORDER BY created_at DESC";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
                 statement.setLong(1, userId);
@@ -360,22 +376,57 @@ public class RecipeDAO extends DAO {
      * @throws SQLException if an error occurs while accessing the ResultSet.
      */
     private Recipe rowToEntity(ResultSet result) throws SQLException {
+        Set<String> columnNames = this.getColumnNames(result);
+
         Recipe recipe = new Recipe();
         recipe.setId(result.getLong("id_recipe"));
         recipe.setTitle(result.getString("title"));
         recipe.setDescription(result.getString("description"));
         recipe.setPreparationTime(result.getInt("preparation_time"));
         recipe.setCookingTime(result.getInt("cooking_time"));
+        recipe.setServings(result.getInt("servings"));
         String difficultyStr = result.getString("difficulty");
         if (difficultyStr != null) {
             recipe.setDifficulty(Recipe.Difficulty.valueOf(difficultyStr));
         }
-        recipe.setServings(result.getInt("servings"));
         recipe.setPublic(result.getBoolean("is_public"));
         recipe.setLunchbox(result.getBoolean("is_lunchbox"));
         recipe.setImagePath(result.getString("image_path"));
-        // User and rootRecipeId are not set here, they should be set in the service layer
+        recipe.setUser(extractUser(result, columnNames));
+
+        if (columnNames.contains("root_recipe_id")) {
+            recipe.setRootRecipeId(result.getLong("root_recipe_id"));
+        }
+
+        if (columnNames.contains("created_at")) {
+            Timestamp createdAt = result.getTimestamp("created_at");
+            if (createdAt != null) {
+                recipe.setCreatedAt(createdAt.toLocalDateTime());
+            }
+        }
+
+        if (columnNames.contains("updated_at")) {
+            Timestamp updatedAt = result.getTimestamp("updated_at");
+            if (updatedAt != null) {
+                recipe.setUpdatedAt(updatedAt.toLocalDateTime());
+            }
+        }
         return recipe;
+    }
+
+    private User extractUser(ResultSet result, Set<String> columnNames)
+    throws SQLException {
+
+        // 'user_id' column is mandatory
+        User user = new User(result.getLong("user_id"));
+
+        if (columnNames.contains(USER_PREFIX + "username")) {
+            user.setUsername(result.getString(USER_PREFIX + "username"));
+        }
+
+        // Additional user fields can be extracted here if needed
+
+        return user;
     }
 
     /**

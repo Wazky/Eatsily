@@ -4,7 +4,7 @@ import tokenManager from '../auth/tokenManager';
 import authService from '../auth/AuthService';
 import { ROUTES } from '../../constants/routes';
 
-const BACKEND_URL = 'Eatsily/rest';
+const BACKEND_URL = '/Eatsily/rest';
 
 let isRefreshingToken = false;
 let refreshPromise = null;

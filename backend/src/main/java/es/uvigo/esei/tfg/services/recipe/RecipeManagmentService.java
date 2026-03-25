@@ -357,7 +357,7 @@ public class RecipeManagmentService {
             recipe.getUser().getUsername(),
             recipe.getRootRecipeId() != null ? recipe.getRootRecipeId() : 0,
             recipe.getCreatedAt().toLocalDate(),
-            recipe.getUpdatedAt().toLocalDate(),
+            recipe.getUpdatedAt() != null ? recipe.getUpdatedAt().toLocalDate() : null,
             ingredientResponses,
             stepResponses
         );

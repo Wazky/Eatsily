@@ -1,5 +1,6 @@
 package es.uvigo.esei.tfg.dto.recipe.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
@@ -14,7 +15,10 @@ public class CreateRecipeRequest {
     private Integer cookingTime;
     private String difficulty;
     private Integer servings;
+
+    @JsonProperty("isPublic")
     private Boolean isPublic;
+    @JsonProperty("isLunchbox")
     private Boolean isLunchbox;
 
     private List<RecipeIngredientRequest> ingredients;
