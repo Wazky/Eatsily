@@ -2,6 +2,8 @@ package es.uvigo.esei.tfg.entities.recipe;
 
 import static java.util.Objects.requireNonNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.uvigo.esei.tfg.entities.user.User;
 
@@ -15,8 +17,6 @@ public class Recipe {
     }
 
     private long id;
-    private String title;
-    private String description;
     private int preparationTime;    // in minutes
     private int cookingTime;        // in minutes
     private int servings;
@@ -28,6 +28,8 @@ public class Recipe {
     private Long rootRecipeId;      // nullable, reference to root recipe
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<RecipeTranslation> translations = new ArrayList<>();
+
 
     // Constructor needed for the JSON conversion
     public Recipe() {}
@@ -40,13 +42,11 @@ public class Recipe {
      * Constructs a new instance of {@link Recipe} with mandatory fields only.
      *
      * @param id       identifier of the recipe.
-     * @param title    title of the recipe.
      * @param servings number of servings this recipe is based on.
      * @param user     author of the recipe.
      */
-    public Recipe(long id, String title, int servings, User user) {
+    public Recipe(long id, int servings, User user) {
         this.id = id;
-        this.setTitle(title);
         this.setServings(servings);
         this.setUser(user);
         this.isPublic = false;
@@ -57,8 +57,6 @@ public class Recipe {
      * Constructs a new instance of {@link Recipe} with all fields.
      *
      * @param id              identifier of the recipe.
-     * @param title           title of the recipe.
-     * @param description     optional description of the recipe.
      * @param preparationTime preparation time in minutes.
      * @param cookingTime     cooking time in minutes.
      * @param servings        number of servings this recipe is based on.
@@ -70,11 +68,10 @@ public class Recipe {
      * @param rootRecipeId    optional id of the root recipe this derives from.
      * @param createdAt       creation timestamp.
      * @param updatedAt       last modification timestamp.
+     * @param translations    list of translations for this recipe.
      */
     public Recipe(
         long id,
-        String title,
-        String description,
         int preparationTime,
         int cookingTime,
         int servings,
@@ -85,11 +82,10 @@ public class Recipe {
         User user,
         Long rootRecipeId,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        List<RecipeTranslation> translations
     ) {
         this.id = id;
-        this.setTitle(title);
-        this.description = description;
         this.preparationTime = preparationTime;
         this.cookingTime = cookingTime;
         this.setServings(servings);
@@ -101,6 +97,7 @@ public class Recipe {
         this.rootRecipeId = rootRecipeId;
         this.setCreatedAt(createdAt);
         this.updatedAt = updatedAt;
+        this.translations = translations;
     }
 
     // Getters and setters
@@ -108,16 +105,6 @@ public class Recipe {
     // Id
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
-
-    // Title
-    public String getTitle() { return title; }
-    public void setTitle(String title) {
-        this.title = requireNonNull(title, "Title can't be null");
-    }
-
-    // Description
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
 
     // Preparation time
     public int getPreparationTime() { return preparationTime; }
@@ -176,6 +163,61 @@ public class Recipe {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
+    public List<RecipeTranslation> getTranslations() { return translations; }
+    public void setTranslations(List<RecipeTranslation> translations) { 
+        if (translations == null) 
+            this.translations = new ArrayList<>();    
+        else
+            this.translations = translations;
+    }
+
+    public void addTranslation(RecipeTranslation translation) {
+        this.translations.add(requireNonNull(translation, "Translation can't be null"));
+    }
+
+    /**
+     * Returns the translation for the specified locale, or the first available translation if not found.
+     * 
+     * @param code the locale code (e.g. "en", "es") to look for.
+     * @return the {@link RecipeTranslation} matching the locale, or null if not found.
+     */
+    public RecipeTranslation getTranslationByLocaleOrFallback(String code) {
+        RecipeTranslation translation = getTranslationByLocale(code);
+        if (translation == null && !translations.isEmpty()) {
+            return translations.get(0); // Return the first translation as default
+        }
+
+        return translation;
+    }
+
+    /**
+     * Returns the translation for the specified locale, or null if not found.
+     * 
+     * @param locale the locale code (e.g. "en", "es") to look for.
+     * @return the {@link RecipeTranslation} matching the locale, or null if not found.
+     */
+    public RecipeTranslation getTranslationByLocale(String locale) {
+        for (RecipeTranslation translation : translations) {
+            if (translation.getLocale().equals(locale)) {
+                return translation;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns a list of all available locale codes for this recipe's translations.
+     * 
+     * @return a list of locale codes.
+     */
+    public List<String> getAvailableLocales() {
+        List<String> locales = new ArrayList<>();
+        for (RecipeTranslation translation : translations) {
+            locales.add(translation.getLocale());
+        }
+        return locales;
+    }
+
     /**
      * Returns the total time (preparation + cooking) in minutes.
      *
@@ -209,6 +251,6 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return "Recipe{id=" + id + ", title='" + title + "', isPublic=" + isPublic + "}";
+        return "Recipe{id=" + id + "', isPublic=" + isPublic + "}";
     }
 }

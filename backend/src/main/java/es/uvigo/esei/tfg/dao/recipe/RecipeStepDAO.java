@@ -47,16 +47,13 @@ public class RecipeStepDAO extends DAO {
             conn = this.getConnection(externalConnection);
 
             final String query = "INSERT INTO recipe_steps" +
-                " (step_number, title, description, image_path, recipe_id)" +
-                " VALUES (?, ?, ?, ?, ?)";
+                " (step_number, image_path, recipe_id)" +
+                " VALUES (?, ?, ?)";
 
             try (final PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 statement.setInt(1, step.getStepNumber());
-                statement.setString(2, step.getTitle());
-                statement.setString(3, step.getDescription());
-                statement.setString(4, step.getImagePath());
-                
-                statement.setLong(5, step.getRecipe().getId());
+                statement.setString(2, step.getImagePath());
+                statement.setLong(3, step.getRecipe().getId());
 
                 int affectedRows = statement.executeUpdate();
                 if (affectedRows == 0) {
@@ -181,18 +178,15 @@ public class RecipeStepDAO extends DAO {
 
         try (final Connection conn = this.getConnection(null)) {
             final String query = "UPDATE recipe_steps SET" +
-                " step_number=?, title=?, description=?, image_path=?" +
+                " step_number=?, image_path=?" +
                 " WHERE id_recipe_step=?";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {
                 statement.setInt(1, step.getStepNumber());
-                statement.setString(2, step.getTitle());
-                statement.setString(3, step.getDescription());
-                statement.setString(4, step.getImagePath());
-                statement.setLong(5, step.getId());
-
-                int affectedRows = statement.executeUpdate();
-                if (affectedRows == 0) {
+                statement.setString(2, step.getImagePath());
+                statement.setLong(3, step.getId());
+                
+                if (statement.executeUpdate() == 0) {
                     throw new IllegalArgumentException("No recipe step found with ID: " + step.getId());
                 }
             }
@@ -281,14 +275,17 @@ public class RecipeStepDAO extends DAO {
         Recipe recipe = new Recipe();
         recipe.setId(result.getLong("recipe_id"));
 
-        return new RecipeStep(
+        RecipeStep step = new RecipeStep(
             result.getLong("id_recipe_step"),
             result.getInt("step_number"),
-            result.getString("title"),
-            result.getString("description"),
-            result.getString("image_path"),
             recipe
         );
+
+        if (result.getString("image_path") != null) {
+            step.setImagePath(result.getString("image_path"));
+        }
+
+        return step;
     }
 
     /**
@@ -309,10 +306,6 @@ public class RecipeStepDAO extends DAO {
 
         if (step.getStepNumber() < 1) {
             throw new IllegalArgumentException("Recipe step number must be greater than 0");
-        }
-
-        if (step.getDescription() == null || step.getDescription().trim().isEmpty()) {
-            throw new IllegalArgumentException("Recipe step description cannot be null or blank");
         }
 
     }

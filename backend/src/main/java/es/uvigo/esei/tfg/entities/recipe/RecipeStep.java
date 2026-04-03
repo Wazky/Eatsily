@@ -1,6 +1,8 @@
 package es.uvigo.esei.tfg.entities.recipe;
 
 import static java.util.Objects.requireNonNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An entity that represents a step in a recipe.
@@ -9,10 +11,10 @@ public class RecipeStep {
     
     private long id;
     private int stepNumber;
-    private String title;
-    private String description;
     private String imagePath;
     private Recipe recipe;
+    // Lazy loading of translations  
+    private List<RecipeStepTranslation> translations = new ArrayList<>();
 
     // Constructor needed for the JSON conversion
     public RecipeStep() {}
@@ -23,13 +25,11 @@ public class RecipeStep {
      * 
      * @param id identifier of the recipe step.
      * @param stepNumber number of the step in the recipe.
-     * @param description description of the step.
      * @param recipe associated recipe entity.
      */
-    public RecipeStep(long id, int stepNumber, String description, Recipe recipe) {
+    public RecipeStep(long id, int stepNumber, Recipe recipe) {
         this.id = id;
-        this.setStepNumber(stepNumber);
-        this.setDescription(description);
+        this.setStepNumber(stepNumber);        
         this.setRecipe(recipe);
     }
 
@@ -39,18 +39,16 @@ public class RecipeStep {
      * 
      * @param id identifier of the recipe step.
      * @param stepNumber number of the step in the recipe.
-     * @param title title of the step.
-     * @param description description of the step.
      * @param imagePath path to the image associated with the step.
      * @param recipe associated recipe entity.
+     * @param translations list of translations for the step.
      */
-    public RecipeStep(long id, int stepNumber, String title, String description, String imagePath, Recipe recipe) {
+    public RecipeStep(long id, int stepNumber, String imagePath, Recipe recipe, List<RecipeStepTranslation> translations) {
         this.id = id;
         this.setStepNumber(stepNumber);
-        this.setTitle(title);
-        this.setDescription(description);
         this.setImagePath(imagePath);
         this.setRecipe(recipe);
+        this.translations = translations;
     }
 
     // Getters and setters
@@ -68,14 +66,6 @@ public class RecipeStep {
         this.stepNumber = stepNumber;
     }
 
-    // Title
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    // Description
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = requireNonNull(description, "Description cannot be null"); }
-
     // Image path
     public String getImagePath() { return imagePath; }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
@@ -84,7 +74,36 @@ public class RecipeStep {
     public Recipe getRecipe() { return recipe; }
     public void setRecipe(Recipe recipe) { this.recipe = requireNonNull(recipe, "Recipe cannot be null"); }
 
+    // Translations
+    public List<RecipeStepTranslation> getTranslations() { return translations; }
+    public void setTranslations(List<RecipeStepTranslation> translations) {
+        if (translations == null) {
+            this.translations = new ArrayList<>();
+        } else {
+            this.translations = translations;
+        }
+    }
     
+    public RecipeStepTranslation getTranslation(String locale) {
+        for (RecipeStepTranslation translation : translations) {
+            if (translation.getLocale().equals(locale)) {
+                return translation;
+            }
+        }
+        return null; 
+    }
+
+    public RecipeStepTranslation getTranslationWithFallback(String locale) {
+        RecipeStepTranslation translation = getTranslation(locale);
+        if (translation != null) {
+            return translation;
+        }
+        if (!translations.isEmpty()) {
+            return translations.get(0);
+        }
+        return null;
+    }
+
     // Override hashCode and equals  based on id
 
     @Override

@@ -48,10 +48,10 @@ CREATE TABLE `eatsily`.`root_recipes` (
 	PRIMARY KEY (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ========= Recipes =========
+
 CREATE TABLE `eatsily`.`recipes` (
 	`id_recipe` BIGINT NOT NULL AUTO_INCREMENT,
-	`title`varchar(100) NOT NULL,
-	`description` text,
 	`preparation_time` int NOT NULL,	-- In minutes
 	`cooking_time` int,					-- In minutes, can be null if not applicable
 	`difficulty` ENUM('EASY', 'MEDIUM', 'HARD'),
@@ -68,15 +68,33 @@ CREATE TABLE `eatsily`.`recipes` (
 	FOREIGN KEY (`root_recipe_id`) REFERENCES `root_recipes`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `eatsily`.`recipes_translations` (
+	`recipe_id` BIGINT NOT NULL,
+	`locale` VARCHAR(5) NOT NULL,
+	`title` VARCHAR(100) NOT NULL,
+	`description` TEXT,
+	PRIMARY KEY (`recipe_id`, `locale`),
+	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id_recipe`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ========== Recipe steps =========
+
 CREATE TABLE `eatsily`.`recipe_steps` (
 	`id_recipe_step` BIGINT NOT NULL AUTO_INCREMENT,
 	`step_number` INT NOT NULL,
-	`title` VARCHAR(100),
-	`description` TEXT NOT NULL,
 	`image_path` VARCHAR(255),
 	`recipe_id` BIGINT NOT NULL,
 	PRIMARY KEY (`id_recipe_step`),
 	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id_recipe`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `eatsily`.`recipe_step_translations` (
+	`step_id` BIGINT NOT NULL,
+	`locale` VARCHAR(5) NOT NULL,
+	`title` VARCHAR(100),
+	`description` TEXT NOT NULL,
+	PRIMARY KEY (`step_id`, `locale`),
+	FOREIGN KEY (`step_id`) REFERENCES `recipe_steps`(`id_recipe_step`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `eatsily`.`ingredient_categories` (

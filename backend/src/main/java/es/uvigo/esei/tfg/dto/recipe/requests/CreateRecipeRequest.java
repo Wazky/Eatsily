@@ -9,6 +9,7 @@ import java.util.List;
 public class CreateRecipeRequest {
     
     // Basic recipe data
+    private String locale; // "en", "es", "gl" - language of title and description
     private String title;
     private String description;
     private Integer preparationTime;
@@ -28,6 +29,7 @@ public class CreateRecipeRequest {
     public CreateRecipeRequest() {}
 
     public CreateRecipeRequest(
+        String locale,
         String title,
         String description,
         Integer preparationTime,
@@ -39,6 +41,7 @@ public class CreateRecipeRequest {
         List<RecipeIngredientRequest> ingredients,
         List<RecipeStepRequest> steps
     ) {
+        this.locale = locale;
         this.title = title;
         this.description = description;
         this.preparationTime = preparationTime;
@@ -52,6 +55,9 @@ public class CreateRecipeRequest {
     }
 
     // Getters and setters
+
+    public String getLocale() { return locale; }
+    public void setLocale(String locale) { this.locale = locale; }
 
     public String getTitle() { return title;}
     public void setTitle(String title) { this.title = title; }

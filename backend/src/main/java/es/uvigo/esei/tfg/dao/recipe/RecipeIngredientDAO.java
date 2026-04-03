@@ -346,14 +346,6 @@ public class RecipeIngredientDAO extends DAO{
 
         // 'recipe_id' column is mandatory
         Recipe recipe = new Recipe(result.getLong("recipe_id"));
-        
-        if (columnNames.contains(RECIPE_PREFIX + "title")) {
-            recipe.setTitle(result.getString(RECIPE_PREFIX + "title"));
-        }
-
-        if (columnNames.contains(RECIPE_PREFIX + "description")) {
-            recipe.setDescription(result.getString(RECIPE_PREFIX + "description"));
-        }
 
         if (columnNames.contains(RECIPE_PREFIX + "preparation_time")) {
             recipe.setPreparationTime(result.getInt(RECIPE_PREFIX + "preparation_time"));

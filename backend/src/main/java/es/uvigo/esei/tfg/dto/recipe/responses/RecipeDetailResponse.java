@@ -13,6 +13,8 @@ public class RecipeDetailResponse {
     private long id;
     private String title;
     private String description;
+    private String locale; // The locale of the returned translation
+    private List<String> availableLocales; // List of available locales for this recipe
     private int preparationTime;
     private int cookingTime;
     private String difficulty;
@@ -35,6 +37,8 @@ public class RecipeDetailResponse {
         long id,
         String title,
         String description,
+        String locale,
+        List<String> availableLocales,
         int preparationTime,
         int cookingTime,
         String difficulty,
@@ -53,6 +57,8 @@ public class RecipeDetailResponse {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.locale = locale;
+        this.availableLocales = availableLocales;
         this.preparationTime = preparationTime;
         this.cookingTime = cookingTime;
         this.difficulty = difficulty;
@@ -79,6 +85,12 @@ public class RecipeDetailResponse {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getLocale() { return locale; }
+    public void setLocale(String locale) { this.locale = locale; }
+
+    public List<String> getAvailableLocales() { return availableLocales; }
+    public void setAvailableLocales(List<String> availableLocales) { this.availableLocales = availableLocales; }
 
     public int getPreparationTime() { return preparationTime; }
     public void setPreparationTime(int preparationTime) { this.preparationTime = preparationTime; }

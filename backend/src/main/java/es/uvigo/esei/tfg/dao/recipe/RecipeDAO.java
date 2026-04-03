@@ -14,6 +14,7 @@ import java.util.Set;
 
 import es.uvigo.esei.tfg.dao.DAO;
 import es.uvigo.esei.tfg.entities.recipe.Recipe;
+import es.uvigo.esei.tfg.entities.recipe.RecipeTranslation;
 import es.uvigo.esei.tfg.entities.user.User;
 import es.uvigo.esei.tfg.exceptions.DAOException;
 
@@ -24,6 +25,7 @@ public class RecipeDAO extends DAO {
     private final static Logger LOG = Logger.getLogger(RecipeDAO.class.getName());
 
     private final static String USER_PREFIX = "user_";
+    private final static String RECIPE_TRANSLATION_PREFIX = "recipe_translation_";
 
     //============     CREATE     ============
     
@@ -52,29 +54,27 @@ public class RecipeDAO extends DAO {
             conn = this.getConnection(externalConnection);
 
             final String query = "INSERT INTO recipes" +
-                " (title, description, preparation_time, cooking_time, difficulty, servings," +
+                " (preparation_time, cooking_time, difficulty, servings," +
                 " is_public, is_lunchbox, image_path, user_id, root_recipe_id, created_at)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
             
             try (final PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statement.setString(1, recipe.getTitle());
-                statement.setString(2, recipe.getDescription());
-                statement.setInt(3, recipe.getPreparationTime());
-                statement.setInt(4, recipe.getCookingTime());
+                statement.setInt(1, recipe.getPreparationTime());
+                statement.setInt(2, recipe.getCookingTime());
                 if (recipe.getDifficulty() != null) {
-                    statement.setString(5, recipe.getDifficulty().name());
+                    statement.setString(3, recipe.getDifficulty().name());
                 } else {
-                    statement.setNull(5, java.sql.Types.VARCHAR);
+                    statement.setNull(3, java.sql.Types.VARCHAR);
                 }
-                statement.setInt(6, recipe.getServings());
-                statement.setBoolean(7, recipe.isPublic());
-                statement.setBoolean(8, recipe.isLunchbox());
-                statement.setString(9, recipe.getImagePath());
-                statement.setLong(10, recipe.getUser().getId());
+                statement.setInt(4, recipe.getServings());
+                statement.setBoolean(5, recipe.isPublic());
+                statement.setBoolean(6, recipe.isLunchbox());
+                statement.setString(7, recipe.getImagePath());
+                statement.setLong(8, recipe.getUser().getId());
                 if (recipe.getRootRecipeId() != null) {
-                    statement.setLong(11, recipe.getRootRecipeId());
+                    statement.setLong(9, recipe.getRootRecipeId());
                 } else {
-                    statement.setNull(11, java.sql.Types.BIGINT);
+                    statement.setNull(9, java.sql.Types.BIGINT);
                 }
 
                 if (statement.executeUpdate() == 1) {
@@ -150,7 +150,6 @@ public class RecipeDAO extends DAO {
                 " ORDER BY created_at DESC";
 
             try (final PreparedStatement statement = conn.prepareStatement(query)) {                
-
                 try (final ResultSet result = statement.executeQuery()) {
                     List<Recipe> recipes = new LinkedList<>();
                     while (result.next()) {
@@ -161,6 +160,37 @@ public class RecipeDAO extends DAO {
             }
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "Error retrieving public recipes: ",e);
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Recipe> getPublicByLocale(String locale) 
+    throws DAOException {
+        try (final Connection conn = this.getConnection(null)) {
+            final String query = "SELECT r.*," +
+                " u.username AS " + USER_PREFIX + "username," +
+                " t.locale AS " + RECIPE_TRANSLATION_PREFIX + "locale," +
+                " t.title AS " + RECIPE_TRANSLATION_PREFIX + "title," +
+                " t.description AS " + RECIPE_TRANSLATION_PREFIX + "description" +
+                " FROM recipes r" +
+                " JOIN users u ON r.user_id = u.id_user" +
+                " JOIN recipe_translations t ON r.id_recipe = t.recipe_id" +
+                " WHERE is_public = TRUE AND t.locale = ?" +
+                " ORDER BY created_at DESC";
+
+            try (final PreparedStatement statement = conn.prepareStatement(query)) {                
+                statement.setString(1, locale);
+
+                try (final ResultSet result = statement.executeQuery()) {
+                    List<Recipe> recipes = new LinkedList<>();
+                    while (result.next()) {
+                        recipes.add(rowToEntity(result));
+                    }
+                    return recipes;
+                }
+            }
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "Error retrieving public recipes by locale: ",e);
             throw new DAOException(e);
         }
     }
@@ -224,32 +254,30 @@ public class RecipeDAO extends DAO {
         try {
             conn = this.getConnection(externalConnection);
 
-            final String query = "UPDATE recipes SET " +
-                " title=?, description=?, preparation_time=?, cooking_time=?," +
+            final String query = "UPDATE recipes SET" +
+                " preparation_time=?, cooking_time=?," +
                 " difficulty=?, servings=?, is_public=?, is_lunchbox=?," +
                 " image_path=?, root_recipe_id=?, updated_at=NOW()" +
                 " WHERE id_recipe=?";
             
-            try (final PreparedStatement statement = conn.prepareStatement(query)) {
-                statement.setString(1, recipe.getTitle());
-                statement.setString(2, recipe.getDescription());
-                statement.setInt(3, recipe.getPreparationTime());
-                statement.setInt(4, recipe.getCookingTime());
+                try (final PreparedStatement statement = conn.prepareStatement(query)) {
+                statement.setInt(1, recipe.getPreparationTime());
+                statement.setInt(2, recipe.getCookingTime());
                 if (recipe.getDifficulty() != null) {
-                    statement.setString(5, recipe.getDifficulty().name());
+                    statement.setString(3, recipe.getDifficulty().name());
                 } else {
-                    statement.setNull(5, java.sql.Types.VARCHAR);
+                    statement.setNull(3, java.sql.Types.VARCHAR);
                 }
-                statement.setInt(6, recipe.getServings());
-                statement.setBoolean(7, recipe.isPublic());
-                statement.setBoolean(8, recipe.isLunchbox());
-                statement.setString(9, recipe.getImagePath());
+                statement.setInt(4, recipe.getServings());
+                statement.setBoolean(5, recipe.isPublic());
+                statement.setBoolean(6, recipe.isLunchbox());
+                statement.setString(7, recipe.getImagePath());
                 if (recipe.getRootRecipeId() != null) {
-                    statement.setLong(10, recipe.getRootRecipeId());
+                    statement.setLong(8, recipe.getRootRecipeId());
                 } else {
-                    statement.setNull(10, java.sql.Types.BIGINT);
+                    statement.setNull(8, java.sql.Types.BIGINT);
                 }
-                statement.setLong(11, recipe.getId());
+                statement.setLong(9, recipe.getId());
 
                 if (statement.executeUpdate() == 0) {
                     LOG.log(Level.SEVERE, "No recipe found with ID: " + recipe.getId());
@@ -380,19 +408,25 @@ public class RecipeDAO extends DAO {
 
         Recipe recipe = new Recipe();
         recipe.setId(result.getLong("id_recipe"));
-        recipe.setTitle(result.getString("title"));
-        recipe.setDescription(result.getString("description"));
         recipe.setPreparationTime(result.getInt("preparation_time"));
         recipe.setCookingTime(result.getInt("cooking_time"));
         recipe.setServings(result.getInt("servings"));
+        
         String difficultyStr = result.getString("difficulty");
         if (difficultyStr != null) {
             recipe.setDifficulty(Recipe.Difficulty.valueOf(difficultyStr));
         }
+        
         recipe.setPublic(result.getBoolean("is_public"));
         recipe.setLunchbox(result.getBoolean("is_lunchbox"));
         recipe.setImagePath(result.getString("image_path"));
+
         recipe.setUser(extractUser(result, columnNames));
+
+        RecipeTranslation translation = extractTranslation(result, columnNames);
+        if (translation != null) {
+            recipe.getTranslations().add(translation);
+        }
 
         if (columnNames.contains("root_recipe_id")) {
             recipe.setRootRecipeId(result.getLong("root_recipe_id"));
@@ -429,6 +463,26 @@ public class RecipeDAO extends DAO {
         return user;
     }
 
+    private RecipeTranslation extractTranslation(ResultSet result, Set<String> columnNames) 
+    throws SQLException {
+        if (!columnNames.contains("locale")) {
+            return null; // No translation data in this result set
+        }
+
+        RecipeTranslation translation = new RecipeTranslation();
+        translation.setRecipeId(result.getLong("id_recipe"));
+        translation.setLocale(result.getString(RECIPE_TRANSLATION_PREFIX + "locale"));
+
+        if (columnNames.contains(RECIPE_TRANSLATION_PREFIX + "title")) {
+            translation.setTitle(result.getString(RECIPE_TRANSLATION_PREFIX + "title"));
+        }
+
+        if (columnNames.contains(RECIPE_TRANSLATION_PREFIX + "description")) {
+            translation.setDescription(result.getString(RECIPE_TRANSLATION_PREFIX + "description"));
+        }
+        return translation;
+    }
+
     /**
      * Validates the integrity of a Recipe object before it is created or updated in the database.
      * This method checks that the recipe is not null, has a non-null and non-blank title, 
@@ -441,9 +495,6 @@ public class RecipeDAO extends DAO {
     throws IllegalArgumentException {
         if (recipe == null) {
             throw new IllegalArgumentException("Recipe cannot be null");
-        }
-        if (recipe.getTitle() == null || recipe.getTitle().trim().isEmpty()) {
-            throw new IllegalArgumentException("Recipe title cannot be null or blank");
         }
         if (recipe.getServings() <= 0) {
             throw new IllegalArgumentException("Recipe servings must be greater than zero");
