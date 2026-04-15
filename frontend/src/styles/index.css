@@ -13,6 +13,8 @@
 @import './base/root.css';
 
 /* LAYOUT */
+@import './layout/_locale-select.css';
+@import './layout/_recipe-detail.css';
 @import './layout/_recipe-grid.css';
 @import './layout/_recipe-search.css';
 @import './layout/_recipe-wizard.css';
@@ -21,6 +23,7 @@
 
 /* MODULES */
 @import './modules/_buttons.css';
+@import './modules/_kebab-menu.css';
 @import './modules/_ingredient-autocomplete.css';
 @import './modules/_recipe-card.css';
 

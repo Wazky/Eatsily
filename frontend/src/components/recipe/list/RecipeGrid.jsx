@@ -16,10 +16,10 @@ import RecipeCard from "./RecipeCard";
  */
 export default function RecipeGrid({ 
     recipes, 
-    onDelete, 
-    onToggleVisibility, 
-    emptyState = 'search',
+    getActions,
+    emptyState = 'search'
 }) {
+    const navigate = useNavigate();
 
     if (!recipes || recipes.length === 0) {
         return <EmptyState type={emptyState} />;
@@ -31,8 +31,8 @@ export default function RecipeGrid({
             <RecipeCard 
                 key={recipe.id}
                 recipe={recipe} 
-                onDelete={onDelete} 
-                onToggleVisibility={onToggleVisibility} 
+                onCardClick={() => { navigate(ROUTES.RECIPE_DETAIL.replace(':id', recipe.id)); }}
+                actions={getActions ? getActions(recipe) : []}
             />
         ))}
     </div>

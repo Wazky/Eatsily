@@ -69,9 +69,22 @@
     color: var(--text-500)
 }
 
+.badge-private {
+    background: var(--primary-900);
+    color: var(--text-300);
+}
+
+
 .badge--difficulty-easy   { background: #2d6a4f; color: #d8f3e3; }
 .badge--difficulty-medium { background: #b5850a; color: #fff8e1; }
 .badge--difficulty-hard   { background: #a31c23; color: #fde8e9; }
+
+.recipe-card__menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+}
 
 /* Body  */
 
@@ -154,6 +167,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.recipe-card__private {
+    font-size: 12px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--primary-400);
 }
 
 .recipe-card__footer-actions {

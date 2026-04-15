@@ -1,8 +1,14 @@
+import { recipeLocaleValidationRules } from "./fields/locale";
 import  { recipeTitleValidationRules } from "./fields/title";
 import  { recipeServingsValidationRules } from "./fields/servings";
 import  { recipeIngredientsValidationRules } from "./fields/ingredients";
 import  { recipeStepsValidationRules } from "./fields/steps";
 import { recipePreparationTimeValidationRules } from "./fields/preparationTime";
+
+// Step 0: Locale Selection 
+export const recipeCreationStep0ValidationSchema = {
+    locale: recipeLocaleValidationRules
+}
 
 // Step 1: Basic Info
 export const recipeCreationStep1ValidationSchema = {
@@ -12,7 +18,7 @@ export const recipeCreationStep1ValidationSchema = {
 
 };
 
-// Step 2: Ingredients
+// Step 2: Ingredients  
 export const recipeCreationStep2ValidationSchema = {
     ingredients: recipeIngredientsValidationRules
 };

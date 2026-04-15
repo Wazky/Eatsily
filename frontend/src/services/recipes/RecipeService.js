@@ -3,11 +3,42 @@ import { ENDPOINTS } from '../api/endpoints';
 
 class RecipeService {
 
-    async listRecipes() {
+    async getRecipe(recipeId, locale = null) {
         try {
+            const params = {};
+            if (locale) params.locale = locale;
+            
+            const response = await $.ajax({
+                url: url(ENDPOINTS.RECIPES.BY_ID(recipeId)),
+                method: 'GET',
+                data: params                
+            });
+
+            console.log('Fetched recipe data:', response);
+            return {
+                success: true,
+                data: response
+            };
+        
+
+        } catch (error) {
+            console.error('FAXXXXXOOOOOOO', error);
+            return {
+                success: false,
+                error: error.responseJSON
+            };
+        }
+    }
+
+    async listRecipes(locale = null) {
+        try {
+            const params = {};
+            if (locale) params.locale = locale;
+
             const response = await $.ajax({
                 url: url(ENDPOINTS.RECIPES.BASE),
-                method: 'GET'        
+                method: 'GET',
+                data: params
             });
 
             return {
@@ -23,11 +54,15 @@ class RecipeService {
         }
     }
 
-    async listMyRecipes() {
+    async listMyRecipes(locale = null) {
         try {
+            const params = {};
+            if (locale) params.locale = locale;
+
             const response = await $.ajax({
                 url: url(ENDPOINTS.RECIPES.MY_RECIPES),
-                method: 'GET'
+                method: 'GET',
+                data: params
             });
 
             return {
@@ -69,8 +104,9 @@ class RecipeService {
         try {
             const response = await $.ajax({
                 url: url(ENDPOINTS.RECIPES.VISIBILITY(recipeId)),
-                method: 'UPDATE',
-                data: JSON.stringify({ public: newVisibility })
+                method: 'PUT',
+                data: JSON.stringify({ public: newVisibility }),
+                dataType: 'text' ,
             });
 
             return {

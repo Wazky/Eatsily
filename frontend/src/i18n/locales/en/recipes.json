@@ -26,7 +26,7 @@
         "name": "Ingredient",
         "quantity": "Quantity",
         "unit": "Unit",
-        "note": "Note"
+        "notes": "Notes"
     },
     
     "stepLabels": {
@@ -37,6 +37,12 @@
     "createNewRecipe": "Create New Recipe",
     
     "recipeCreate": {
+        "locale": {
+            "title": "What language is your recipe in?",
+            "subtitle": "You can add more languages after creating it.",
+            "note": "The selected language will be applied to the title, description, and steps of the recipe.",
+            "create": "Create in {{language}}"
+        },
         "stepLabels": {
             "step1": "Basic Information",
             "step2": "Ingredients",
@@ -119,12 +125,42 @@
                 "privacy": {
                     "private": "Private",
                     "public": "Public"
+                },
+                "actions": {
+                    "edit": "Edit",
+                    "makePrivate": "Make Private",
+                    "makePublic": "Make Public",
+                    "delete": "Delete"
                 }
             }
         }       
-    }
+    },
     
- 
+    "recipeDetail": {
+        "actions": {
+            "edit": "Edit Recipe",
+            "delete": "Delete Recipe",
+            "makePrivate": "Make Private",
+            "makePublic": "Make Public"
+        },
+        "noDescription": "No description provided for this recipe.",
+        "metadata": {
+            "servings": "Servings:  ",
+            "prepTime": "Prep time: {{time}} mins",
+            "cookingTime": "Cooking time: {{time}} mins",
+            "totalTime": "Total time: {{time}} mins"
+        },
+        "ingredientsTab": {
+            "title": "Ingredients",
+            "empty": "No ingredients added yet.",
+            "notes": "Notes: "
+        },
+        "stepsTab": {
+            "title": "Steps",
+            "empty": "No steps added yet."
+        }
+
+    }
 
     
 }

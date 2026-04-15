@@ -10,8 +10,6 @@ export default function Step3Steps({
 }) {
     const { t } = useTranslation("recipes");
 
-    console.log("Step3 Errors:", errors);
-
     return (
     <div className="wizard-step-content">
 

@@ -177,10 +177,10 @@ public class RecipeIngredientDAO extends DAO{
                 " ic.description AS " + INGREDIENT_CATEGORY_PREFIX + "description," +
                 " mu.name AS " + MEASUREMENT_UNIT_PREFIX + "name," +
                 " mu.abbreviation AS " + MEASUREMENT_UNIT_PREFIX + "abbreviation," +
-                " mu.type AS " + MEASUREMENT_UNIT_PREFIX + "type," +
+                " mu.type AS " + MEASUREMENT_UNIT_PREFIX + "type" +
                 " FROM recipe_ingredients ri" +
                 " JOIN ingredients i ON ri.ingredient_id = i.id_ingredient" +
-                " LEFT JOIN ingredient_categories ic ON i.category_id = ic.id_category" +
+                " LEFT JOIN ingredient_categories ic ON i.category_id = ic.id_ingredient_category" +
                 " JOIN measurement_units mu ON ri.measurement_unit_id = mu.id_measurement_unit" +
                 " WHERE recipe_id=?";
 

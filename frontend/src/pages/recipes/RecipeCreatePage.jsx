@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import WizardStepper from "../../components/common/wizard/WizardStepper";
+import Step0Locale from "../../components/recipe/create/Step0Locale";
 import Step1BasicInfo from "../../components/recipe/create/Step1BasicInfo";
 import Step2Ingredients from "../../components/recipe/create/Step2Ingredients";
 import Step3Steps from "../../components/recipe/create/Step3Steps";
@@ -22,7 +23,9 @@ export default function RecipeCreatePage() {
 
     const {
         currentStep,
+        wizardStep,
         totalSteps,
+        isLocaleStep,
         formData,
         errors,
         ingredientFieldErrors,
@@ -42,12 +45,13 @@ export default function RecipeCreatePage() {
 
     const stepProps = { formData, errors, updateField };
 
+
     return (
     <div className="page-container">        
         <div className="wizard-container">
 
             <WizardStepper
-                currentStep={currentStep}
+                currentStep={wizardStep}
                 totalSteps={totalSteps}
                 stepLabels={CREATE_RECIPE_STEP_LABELS}
             />
@@ -56,15 +60,22 @@ export default function RecipeCreatePage() {
 
                 <div className="wizard-card__header">
                     <h2 className="wizard-card__title">
-                        {t(CREATE_RECIPE_STEP_LABELS[currentStep - 1])}
+                        {t(CREATE_RECIPE_STEP_LABELS[wizardStep - 1])}
                     </h2>
                 </div>
 
-                {currentStep === 1 && (
+                {isLocaleStep && (
+                    <Step0Locale
+                        formData={formData}
+                        updateField={updateField}
+                    />                    
+                )}
+
+                {wizardStep === 1 && (
                     <Step1BasicInfo {...stepProps} />
                 )}
 
-                {currentStep === 2 && (
+                {wizardStep === 2 && (
                     <Step2Ingredients
                         {...stepProps}
                         ingredientFieldErrors={ingredientFieldErrors}
@@ -74,7 +85,7 @@ export default function RecipeCreatePage() {
                     />
                 )}
 
-                {currentStep === 3 && (
+                {wizardStep === 3 && (
                     <Step3Steps
                         {...stepProps}
                         addStep={addStep}
@@ -83,7 +94,7 @@ export default function RecipeCreatePage() {
                     />                
                 )}
 
-                {currentStep === 4 && (
+                {wizardStep === 4 && (
                     <Step4Publish {...stepProps} />
                 )}
 

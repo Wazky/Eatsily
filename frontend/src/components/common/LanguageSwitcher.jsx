@@ -17,8 +17,6 @@ export default function LanguageSwitcher({ textColorClass = "aa-txt-text" }) {
         i18n.changeLanguage(lng);
         localStorage.setItem('language', lng);
     };
-
-    console.log("Current Language:", i18n.language);
     
     return (
             <div className='dropdown m-2 hover-move-up rounded-3'>

@@ -27,6 +27,17 @@
     background: var(--accent-700);
 }
 
+.btn.aa-text {
+    background: var(--text-500);
+    color: var(--primary-500);
+    border: none;
+}
+
+.btn.aa-text:hover {
+    background: var(--text-600);
+    color: var(--primary-600);
+}
+
 .btn.aa-danger {
     background: var(--error);
     color: var(--error-light);

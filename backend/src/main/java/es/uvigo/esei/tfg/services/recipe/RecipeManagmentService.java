@@ -750,12 +750,23 @@ public class RecipeManagmentService {
         return resolved;
     }
 
-    private Recipe buildRecipeEntityFromRequest(CreateRecipeRequest request, User user) {
+    private Recipe buildRecipeEntityFromRequest(CreateRecipeRequest request, User user) 
+    throws ValidationException {
+        Difficulty difficulty = null;
+        if (request.getDifficulty() != null && !request.getDifficulty().trim().isEmpty()) {
+            try {
+                difficulty = Difficulty.valueOf(request.getDifficulty().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                LOG.log(Level.SEVERE, "Invalid difficulty value: " + request.getDifficulty(), e);
+                throw new ValidationException("Invalid difficulty value: " + request.getDifficulty() + ". Allowed values are: EASY, MEDIUM, HARD.");
+            }
+        }
+
         Recipe recipe = new Recipe();
         recipe.setPreparationTime(request.getPreparationTime() != null ? request.getPreparationTime() : 0);
         recipe.setCookingTime(request.getCookingTime() != null ? request.getCookingTime() : 0);
         recipe.setServings(request.getServings() != null ? request.getServings() : 0);
-        recipe.setDifficulty(request.getDifficulty() != null ? Difficulty.valueOf(request.getDifficulty().toUpperCase()) : null);
+        recipe.setDifficulty(difficulty);
         recipe.setPublic(request.isPublic());
         recipe.setLunchbox(request.isLunchbox());
         recipe.setImagePath(null); // image path will be set later when the image is uploaded

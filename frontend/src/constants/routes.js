@@ -17,6 +17,9 @@ export const ROUTES = {
     PROFILE: "/profile",  
     SETTINGS: "/settings",      
 
+    // User routes
+    USER: "/user/:username",
+
     // Recipes routes
     RECIPES: "/recipes",
     MY_RECIPES: "/my-recipes",

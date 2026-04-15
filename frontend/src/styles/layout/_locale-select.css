@@ -1,0 +1,120 @@
+/* ==========================================================================
+ * LOCALE SELECTION SCREEN (Step 0)
+ * ========================================================================== */
+
+.locale-select-screen {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+
+}
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+
+.locale-select-screen__header {
+    text-align: center;
+}
+
+.locale-select-screen__icon {
+    font-size: 3rem;
+    color: var(--text-500);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.locale-select-screen__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-500);
+    margin-bottom: 0.5rem;
+}
+
+.locale-select-screen__subtitle {
+    font-size: 0.95rem;
+    color: var(--text-400);
+    margin: 0;
+}
+
+/* ── Locale options ─────────────────────────────────────────────────────────── */
+
+.locale-select-screen__options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.locale-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 2px solid var(--primary-200);
+    border-radius: 12px;
+    background: var(--text-500);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    width: 100%;
+    position: relative;
+}
+
+.locale-option:hover {
+    border-color: var(--primary-400);
+    background: var(--text-200);
+}
+
+.locale-option--selected {
+    border-color: var(--accent-500);
+    background: var(--accent-50);
+}
+
+.locale-option__flag {
+    width: 40px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+
+.locale-option__name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--primary-500);
+    display: block;
+    line-height: 1.2;
+}
+
+.locale-option--selected .locale-option__name {
+    color: var(--primary-600);
+}
+
+.locale-option__desc {
+    font-size: 0.8rem;
+    color: var(--primary-400);
+    display: block;
+    margin-top: 2px;
+}
+
+.locale-option__check {
+    position: absolute;
+    right: 20px;
+    font-size: 1.25rem;
+    color: var(--accent-500);
+}
+
+/* ── Note ───────────────────────────────────────────────────────────────────── */
+
+.locale-select-screen__note {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-400);
+    text-align: center;
+    margin: 0;
+}

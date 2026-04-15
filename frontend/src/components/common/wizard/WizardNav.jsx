@@ -5,12 +5,12 @@ export default function WizardNav({
     totalSteps,
     onNext,
     onPrev,
-    omCancel,
+    onCancel,
     onSubmit,
     loading
 }) {
     const { t } = useTranslation("recipes");
-    const isFirst = currentStep === 1;
+    const isFirst = currentStep === 0;
     const isLast = currentStep === totalSteps;
 
     return (
@@ -18,7 +18,7 @@ export default function WizardNav({
         <BackButton
             isFirst={isFirst}
             onPrev={onPrev}
-            onCancel={omCancel}
+            onCancel={onCancel}
         />
 
         <span className="wizard-nav__counter">

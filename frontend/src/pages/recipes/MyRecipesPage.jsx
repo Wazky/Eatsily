@@ -24,6 +24,25 @@ export default function MyRecipesPage() {
         await toggleRecipeVisibility(recipeId, !currentVisibility);
     };
 
+    const getActions = (recipe) => [
+        {
+            label: t("recipeList.recipeGrid.recipeCard.actions.edit"),
+            icon: "bi bi-pencil",
+            onClick: () => navigate(ROUTES.RECIPE_EDIT.replace(':id', recipe.id))
+        },
+        {
+            label: recipe.public ? t("recipeList.recipeGrid.recipeCard.actions.makePrivate") : t("recipeList.recipeGrid.recipeCard.actions.makePublic"),
+            icon: recipe.public ? "bi bi-lock" : "bi bi-globe",
+            onClick: () => handleToggleVisibility(recipe.id, recipe.public)
+        },
+        {
+            label: t("recipeList.recipeGrid.recipeCard.actions.delete"),
+            icon: "bi bi-trash",
+            danger: true,
+            onClick: () => handleDelete(recipe.id)
+        }
+    ];
+
     return (
     <div className="page-container">
 
@@ -46,8 +65,7 @@ export default function MyRecipesPage() {
             ? <p className="loading-text">{t("loadingYourRecipes")}</p>
             : <RecipeGrid 
                 recipes={recipes}
-                onDelete={handleDelete}
-                onToggleVisibility={handleToggleVisibility}
+                getActions={getActions}
                 emptyState="myRecipes"
             />
         }

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { PlaceholderIcon, ClockIcon, ServingsIcon, LockIcon, DifficultyBadge } from "./RecipeCardComponents";
+import { PlaceholderIcon, ClockIcon, ServingsIcon, LockIcon, DifficultyBadge, LunchBoxBadge, PrivateBadge } from "./RecipeCardComponents";
+import KebabMenu from "../../common/KebabMenu";
 
 /**
  * Component for displaying a recipe card in the recipe list.
@@ -11,13 +12,18 @@ import { PlaceholderIcon, ClockIcon, ServingsIcon, LockIcon, DifficultyBadge } f
  * @param {Function} onToggleVisibility - Optional callback function to handle toggling recipe visibility.
  * @returns {JSX.Element} The rendered recipe card component.
  */
-export default function RecipeCard({ recipe, onDelete, onToggleVisibility }) {
+export default function RecipeCard({ recipe, onCardClick, actions = [] }) {
     const { t } = useTranslation("recipes");
     const initials = recipe.authorUsername.slice(0,2).toUpperCase();
     const totalTime = recipe.preparationTime + recipe.cookingTime;
 
     return (
-    <div className="recipe-card shadow-sm">
+    <div 
+        className={`recipe-card shadow-sm ${!recipe.public ? 'recipe-card--private' : ''}`} 
+        onClick={onCardClick}
+        role={onCardClick ? "button" : undefined}
+        style={onCardClick ? { cursor : 'pointer' } : undefined}
+    >
 
         {/* Image Section: Recipe Image and Badges */}
         <div className="recipe-card__image">
@@ -31,9 +37,14 @@ export default function RecipeCard({ recipe, onDelete, onToggleVisibility }) {
             {/* Badges (Difficulty, Lunchbox) */}
             <div className="recipe-card__badges" >
                 {recipe.difficulty && <DifficultyBadge difficulty={recipe.difficulty} />}
-                {recipe.lunchbox && <span className="badge badge-lunchbox">{t("recipeLabels.lunchbox")}</span>}
+                {recipe.lunchbox && <LunchBoxBadge />}
             </div>
             
+            {/* Kebab Menu for actions */}
+            <div className="recipe-card__menu" onClick={e => e.stopPropagation()}>
+                <KebabMenu actions={actions} /> 
+            </div>
+
         </div>
 
         {/* Body Section: Title, Description and Metadata */}
@@ -65,10 +76,7 @@ export default function RecipeCard({ recipe, onDelete, onToggleVisibility }) {
             </div>
             
             {!recipe.public && 
-                <span className="recipe-card__private">
-                    <LockIcon />
-                    {t("recipeList.recipeGrid.recipeCard.privacy.private")}
-                </span>                
+                <PrivateBadge />
             }
 
         </div>

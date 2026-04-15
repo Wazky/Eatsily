@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation, matchPath } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 import { ROUTES } from "../constants/routes";
 import MainLayout from "../components/layout/MainLayout";
@@ -14,11 +14,21 @@ const PAGES_TITLES = {
     [ROUTES.RECIPE_EDIT]: "pages.editRecipe",
 }
 
+function getPageTittle(pathname) {
+    for (const [pattern, title] of Object.entries(PAGES_TITLES)) {
+        if (matchPath(pattern, pathname)) {
+            return title;
+        }
+    }
+    return "pages.default";
+}
+
 export default function ProtectedRoute() {
     const location = useLocation();
     const { isAuthenticated, isInitialized, loading } = useAuthContext();
 
-    const page = PAGES_TITLES[location.pathname] || "pages.default";
+    console.log("Location:", location.pathname);
+    const page = getPageTittle(location.pathname);
 
     if (loading || !isInitialized) {
         return (

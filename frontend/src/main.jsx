@@ -22,6 +22,7 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import RecipeListPage from './pages/recipes/RecipeListPage.jsx';
 import MyRecipesPage from './pages/recipes/MyRecipesPage.jsx';
 import RecipeCreatePage from './pages/recipes/RecipeCreatePage.jsx';
+import RecipeDetailPage from './pages/recipes/RecipeDetailPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -45,9 +46,12 @@ const router = createBrowserRouter([
       // Recipes
       { path: ROUTES.RECIPES , element: <RecipeListPage />},
       { path: ROUTES.MY_RECIPES , element: <MyRecipesPage />},
-      { path: ROUTES.RECIPE_DETAIL , element: <></>},
+      { path: ROUTES.RECIPE_DETAIL , element: <RecipeDetailPage />},
       { path: ROUTES.RECIPE_CREATE , element: <RecipeCreatePage />},
       { path: ROUTES.RECIPE_EDIT , element: <></>},
+
+      // User
+      {path: ROUTES.USER, element: <></>},
     ],
   },
 ])

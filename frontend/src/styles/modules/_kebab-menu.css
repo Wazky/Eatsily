@@ -1,0 +1,92 @@
+/* ==========================================================================
+ * KEBAB MENU
+ * ========================================================================== */
+
+.kebab-menu {
+    position: relative;
+}
+
+/* ── Trigger button ─────────────────────────────────────────────────────────── */
+
+.kebab-menu__trigger {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--text-500);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    
+}
+
+.kebab-menu__trigger:hover {
+    background: var(--text-500);
+    color: var(--primary-600);
+}
+
+/* ── Dropdown ───────────────────────────────────────────────────────────────── */
+
+.kebab-menu__dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 160px;
+    background: var(--text-500);
+    border: 1px solid var(--primary-100);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+    z-index: 100;
+    animation: kebab-fade-in 0.1s ease;
+}
+
+@keyframes kebab-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Items ──────────────────────────────────────────────────────────────────── */
+
+.kebab-menu__item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: none;
+    background: var(--text-500);
+    color: var(--primary-500);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.1s ease;
+    text-align: left;
+}
+
+.kebab-menu__item:hover {
+    background: var(--primary-50);
+}
+
+.kebab-menu__item i {
+    font-size: 13px;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.kebab-menu__item--danger {
+    color: var(--error);
+}
+
+.kebab-menu__item--danger:hover {
+    background: var(--error-light);
+}

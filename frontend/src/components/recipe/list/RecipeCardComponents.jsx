@@ -34,6 +34,27 @@ export function DifficultyBadge({ difficulty }) {
     );
 }
 
+export function LunchBoxBadge() {
+    const { t } = useTranslation("recipes");
+
+    return (
+    <span className="badge badge-lunchbox">
+        {t("recipeLabels.lunchbox")}
+    </span>        
+    );
+}
+
+export function PrivateBadge() {
+    const { t } = useTranslation("recipes");
+
+    return (
+    <span className="badge badge-private">
+        <i className="bi bi-lock-fill me-1"></i>
+        {t("recipeList.recipeGrid.recipeCard.privacy.private")}
+    </span>        
+    );
+}
+
 // ─── Body Section ────────────────────────────────────────────────────────
 
 export function ClockIcon() {
@@ -47,7 +68,7 @@ export function ServingsIcon() {
 // ─── Footer Section ────────────────────────────────────────────────────────  
 
 export function LockIcon() {
-    return <i className="bi bi-lock meta-icon" />;
+    return <i className="bi bi-lock-fill meta-icon" />;
 }
 
 export function UnlockIcon() {

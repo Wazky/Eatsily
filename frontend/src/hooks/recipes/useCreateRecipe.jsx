@@ -23,6 +23,8 @@ const FORM_STEP_SCHEMAS = {
 };
 
 const initialFormData = {
+    // Step 0: Locale
+    locale: localStorage.getItem('language') || 'en',
     // Step 1: Basic Info
     title : '',
     description: '',
@@ -59,13 +61,16 @@ function validateSchema(data, schema) {
 export default function useCreateRecipe() {
     const navigate = useNavigate();
 
-    const [currentStep, setCurrentStep] = useState(1);
+    const [currentStep, setCurrentStep] = useState(0);
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [submitError, setSubmitError] = useState(null);
-
     const [ingredientFieldErrors, setIngredientFieldErrors] = useState([]);
+
+    const isLocaleStep = currentStep === 0;
+    const wizardStep = currentStep;
+    const totalSteps = TOTAL_STEPS;
 
     const updateField = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -179,6 +184,12 @@ export default function useCreateRecipe() {
     // -- Navigation Handlers -------------------------------------------------
 
     const nextStep = () => {
+        // Step 0 has no specific validation, we can skip it
+        if (currentStep === 0) {
+            setCurrentStep(1);
+            return true;
+        }
+
         const schema = FORM_STEP_SCHEMAS[currentStep];
         const stepErrors = validateSchema(formData, schema);
 
@@ -200,7 +211,7 @@ export default function useCreateRecipe() {
 
     const prevStep = () => {
         setErrors({});
-        setCurrentStep(prev => Math.max(prev - 1, 1));
+        setCurrentStep(prev => Math.max(prev - 1, 0));
     };
 
     // -- Submission Handler -------------------------------------------------
@@ -236,7 +247,9 @@ export default function useCreateRecipe() {
 
     return {
         currentStep,
+        wizardStep,
         totalSteps: TOTAL_STEPS,
+        isLocaleStep,
         formData,
         errors,
         ingredientFieldErrors,        
